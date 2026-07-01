@@ -1,0 +1,34 @@
+.kanban-page {
+  display: flex;
+  flex-direction: column;
+}
+
+.context-toolbar {
+  background-color: red;
+  font-size: var(--md);
+}
+
+.kanban-board {
+  display: flex;
+  justify-content: space-around;
+  background-color: yellow;
+  flex: 1;
+}
+
+.kanban-column {
+  background-color: orange;
+  height: 100%;
+}
+
+.add-tool-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  color: white;
+  width: 60px;
+  height: 60px;
+  border-radius: 30px;
+  border: 0;
+  font-size: 40px;
+  background-color: var(--accent-color);
+}
