@@ -1,0 +1,54 @@
+<div class="kanban-column">
+  <div class="column-header">
+    <h4 class="column-name">Column name</h4>
+    <span class="column-task-count">0</span>
+    <button class="column-options" type="button" (click)="isModalOpen.set(true)">ops</button>
+  </div>
+
+  <ul class="task-list">
+    <li class="task-item">
+      <app-kanban-task-card />
+    </li>
+    <li class="task-item">
+      <app-kanban-task-card />
+    </li>
+    <li class="task-item">
+      <app-kanban-task-card />
+    </li>
+  </ul>
+</div>
+
+<div class="kanban-column">
+  <div class="column-header">
+    <h4 class="column-name">Column name</h4>
+    <span class="column-task-count">0</span>
+    <button class="column-options" type="button">ops</button>
+  </div>
+
+  <ul class="task-list">
+    <li class="task-item">
+      <app-kanban-task-card />
+    </li>
+    <li class="task-item">
+      <app-kanban-task-card />
+    </li>
+    <li class="task-item">
+      <app-kanban-task-card />
+    </li>
+    <li class="task-item">
+      <app-kanban-task-card />
+    </li>
+    <li class="task-item">
+      <app-kanban-task-card />
+    </li>
+    <li class="task-item">
+      <app-kanban-task-card />
+    </li>
+  </ul>
+</div>
+
+@if(isModalOpen()) {
+  <app-modal title="Edit column" (close)="isModalOpen.set(false)">
+    <p>editing the kanban column</p>
+  </app-modal>
+}

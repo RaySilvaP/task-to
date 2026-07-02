@@ -1,0 +1,6 @@
+<ul class="actions-list" [class.open]="isOpen()">
+  <li class="action-item">task</li>
+  <li class="action-item">context</li>
+  <li class="action-item">column</li>
+</ul>
+<button class="action-btn" type="button" (click)="isOpen.set(!isOpen())">+</button>

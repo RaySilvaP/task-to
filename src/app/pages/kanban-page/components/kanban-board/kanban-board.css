@@ -1,0 +1,36 @@
+:host {
+  display: flex;
+  background-color: yellow;
+  flex: 1;
+  padding: var(--xsm);
+  gap: var(--xsm);
+  overflow-x: auto;
+}
+
+.kanban-column {
+  background-color: orange;
+  height: 100%;
+  flex: 0 0 60%;
+}
+
+.column-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: var(--md);
+  padding: 0 var(--xsm);
+  background-color: wheat;
+}
+
+.column-name {
+  display: inline-block;
+}
+
+.task-item {
+  background-color: wheat;
+  margin-bottom: var(--xsm);
+}
+
+.task-item:last-child {
+  margin-bottom: 0;
+}

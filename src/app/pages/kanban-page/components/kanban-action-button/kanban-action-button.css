@@ -1,0 +1,49 @@
+:host {
+  position: fixed;
+  display: flex;
+  justify-content: center;
+  bottom: 20px;
+  right: 20px;
+}
+
+.action-btn {
+  color: white;
+  width: 60px;
+  height: 60px;
+  border-radius: 30px;
+  border: 0;
+  font-size: 40px;
+  background-color: var(--accent-color);
+  cursor: pointer;
+}
+
+.actions-list {
+  opacity: 0;
+  position: absolute;
+  bottom: calc(100% + var(--sm));
+  font-size: 1.15em;
+
+  transform: translateY(10px);
+  pointer-events: none;
+
+  transition: opacity 150ms ease, transform 150ms ease;
+}
+
+.actions-list.open {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.action-item {
+  margin-bottom: var(--md);
+  text-align: center;
+  font-weight: 500;
+  padding: var(--xsm);
+  background: rgba(255, 0, 0, 0.5);
+  border-radius: var(--xsm);
+}
+
+.action-item:last-child {
+  margin-bottom: 0;
+}
