@@ -1,8 +1,19 @@
 /* You can add global styles to this file, and also import other style files */
 :root {
   --accent-color: red;
-  --sm: 0.5rem;
+  --xsm: 0.5rem;
+  --sm: 0.875rem;
   --md: 1rem;
   --lg: 1.5rem;
   --xlg: 2rem;
+}
+
+body {
+  margin: 0;
+}
+
+ul {
+  list-style: none;
+  padding: var(--xsm);
+  margin: 0;
 }

@@ -15,10 +15,10 @@
 }
 
 .container {
-  margin: 0;
+  padding: var(--xsm);
   padding-top: 5vh;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  text-align: center;
+  min-height: 100vh;
+  box-sizing: border-box;
 }
