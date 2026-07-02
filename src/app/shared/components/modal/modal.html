@@ -1,0 +1,22 @@
+<div class="backdrop" (click)="close.emit()">
+  <div class="modal" (click)="$event.stopPropagation()">
+    <header class="modal-header">
+      <h2>{{ title() }}</h2>
+
+      <button
+        class="close-btn"
+        type="button"
+        (click)="close.emit()">
+        ×
+      </button>
+    </header>
+
+    <section class="modal-body">
+      <ng-content></ng-content>
+    </section>
+
+    <footer class="modal-footer">
+      <ng-content select="[modal-footer]"></ng-content>
+    </footer>
+  </div>
+</div>
