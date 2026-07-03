@@ -1,6 +1,36 @@
 <ul class="actions-list" [class.open]="isOpen()">
-  <li class="action-item">task</li>
-  <li class="action-item">context</li>
-  <li class="action-item">column</li>
+  <li class="action-item" (click)="isModalOpen.set('task')">task</li>
+  <li class="action-item" (click)="isModalOpen.set('context')">context</li>
+  <li class="action-item" (click)="isModalOpen.set('column')">column</li>
 </ul>
 <button class="action-btn" type="button" (click)="isOpen.set(!isOpen())">+</button>
+
+@switch(isModalOpen()) {
+@case('task') {
+<app-modal-task type="create" (close)="isModalOpen.set('none')" />
+}
+
+@case('column') {
+<app-modal title="Create Kanban Column" (close)="isModalOpen.set('none')">
+  <label class="form-field">
+    Name
+    <input type="text" name="column-name">
+  </label>
+  <app-modal-footer modal-footer>
+    <app-button>Confirm</app-button>
+  </app-modal-footer>
+</app-modal>
+}
+
+@case('context') {
+<app-modal title="Create Context" (close)="isModalOpen.set('none')">
+  <label class="form-field">
+    Name
+    <input type="text" name="context-name">
+  </label>
+  <app-modal-footer modal-footer>
+    <app-button>Confirm</app-button>
+  </app-modal-footer>
+</app-modal>
+}
+}

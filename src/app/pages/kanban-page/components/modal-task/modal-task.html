@@ -1,0 +1,20 @@
+<app-modal [title]="type() == 'create' ? 'Create Task' : 'Edit Task'" (close)="close.emit()">
+  <form [formGroup]=taskForm>
+    <label class="form-field">
+      Name
+      <input type="text" formControlName="name">
+    </label>
+
+    <label class="form-field">
+      Due
+      <input type="date" formControlName="due">
+    </label>
+  </form>
+
+  <app-modal-footer modal-footer>
+    @if(type() === 'edit') {
+    <app-button variant="danger">Delete</app-button>
+    }
+    <app-button [disabled]="taskForm.invalid" (click)="onSubmitForm()" variant="primary">Confirm</app-button>
+  </app-modal-footer>
+</app-modal>

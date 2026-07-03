@@ -2,12 +2,12 @@
   <div class="column-header">
     <h4 class="column-name">Column name</h4>
     <span class="column-task-count">0</span>
-    <button class="column-options" type="button" (click)="isModalOpen.set(true)">ops</button>
+    <button class="column-options" type="button" (click)="isModalColumnOpen.set(true)">ops</button>
   </div>
 
   <ul class="task-list">
     <li class="task-item">
-      <app-kanban-task-card />
+      <app-kanban-task-card (click)="isModalTaskOpen.set(true)" />
     </li>
     <li class="task-item">
       <app-kanban-task-card />
@@ -47,8 +47,21 @@
   </ul>
 </div>
 
-@if(isModalOpen()) {
-  <app-modal title="Edit column" (close)="isModalOpen.set(false)">
-    <p>editing the kanban column</p>
-  </app-modal>
+@if(isModalColumnOpen()) {
+<app-modal title="Edit column" (close)="isModalColumnOpen.set(false)">
+  <div class="column-form">
+    <label>
+      Name:
+      <input type="text" name="column-name">
+    </label>
+  </div>
+  <app-modal-footer modal-footer>
+    <app-button variant="danger" (click)="onDeleteColumn()">Delete</app-button>
+    <app-button variant="primary" (click)="onSaveColumn()">Save</app-button>
+  </app-modal-footer>
+</app-modal>
+}
+
+@if(isModalTaskOpen()) {
+  <app-modal-task type="edit" (close)="isModalTaskOpen.set(false)"/>
 }

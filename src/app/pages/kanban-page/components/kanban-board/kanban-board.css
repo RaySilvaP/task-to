@@ -34,3 +34,9 @@
 .task-item:last-child {
   margin-bottom: 0;
 }
+
+.column-form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
