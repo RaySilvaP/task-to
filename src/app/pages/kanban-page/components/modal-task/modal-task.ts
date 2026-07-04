@@ -3,10 +3,11 @@ import { Modal } from '../../../../shared/components/modal/modal';
 import { ModalFooter } from '../../../../shared/components/modal-footer/modal-footer';
 import { Button } from "../../../../shared/components/button/button";
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { InputField } from "../../../../shared/components/input-field/input-field";
 
 @Component({
   selector: 'app-modal-task',
-  imports: [Modal, ModalFooter, Button, ReactiveFormsModule],
+  imports: [Modal, ModalFooter, Button, ReactiveFormsModule, InputField],
   templateUrl: './modal-task.html',
   styleUrl: './modal-task.css',
 })

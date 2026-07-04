@@ -5,7 +5,18 @@
     <option value="School">School</option>
     <option value="Personal">Personal</option>
   </select>
+  <button type="button" (click)="isModalOpen.set(true)">Edit Context</button>
 </div>
 
 <app-kanban-board />
 <app-kanban-action-button />
+
+@if(isModalOpen()) {
+  <app-modal title="Edit context" (close)="isModalOpen.set(false)">
+    <app-input-field label="Name" type="text"/>
+    <app-modal-footer modal-footer>
+      <app-button variant="danger">Delete</app-button>
+      <app-button variant="primary">Confirm</app-button>
+    </app-modal-footer>
+  </app-modal>
+}
