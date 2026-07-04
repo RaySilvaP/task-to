@@ -5,16 +5,12 @@
     <button class="column-options" type="button" (click)="isModalColumnOpen.set(true)">ops</button>
   </div>
 
-  <ul class="task-list">
-    <li class="task-item">
-      <app-kanban-task-card (click)="isModalTaskOpen.set(true)" />
-    </li>
-    <li class="task-item">
-      <app-kanban-task-card />
-    </li>
-    <li class="task-item">
-      <app-kanban-task-card />
-    </li>
+  <ul class="task-list" cdkDropList (cdkDropListDropped)="drop($event)" #todoList="cdkDropList" [cdkDropListData]="tasks" [cdkDropListConnectedTo]="[doneList]">
+    @for(task of tasks; track task) {
+      <li class="task-item" cdkDrag>
+        <app-kanban-task-card (click)="isModalTaskOpen.set(true)" />
+      </li>
+    }
   </ul>
 </div>
 
@@ -22,28 +18,15 @@
   <div class="column-header">
     <h4 class="column-name">Column name</h4>
     <span class="column-task-count">0</span>
-    <button class="column-options" type="button">ops</button>
+    <button class="column-options" type="button" (click)="isModalColumnOpen.set(true)">ops</button>
   </div>
 
-  <ul class="task-list">
-    <li class="task-item">
-      <app-kanban-task-card />
-    </li>
-    <li class="task-item">
-      <app-kanban-task-card />
-    </li>
-    <li class="task-item">
-      <app-kanban-task-card />
-    </li>
-    <li class="task-item">
-      <app-kanban-task-card />
-    </li>
-    <li class="task-item">
-      <app-kanban-task-card />
-    </li>
-    <li class="task-item">
-      <app-kanban-task-card />
-    </li>
+  <ul class="task-list" cdkDropList (cdkDropListDropped)="drop($event)" #doneList="cdkDropList" [cdkDropListData]="tasks1" [cdkDropListConnectedTo]="[todoList]">
+    @for(task of tasks1; track task) {
+      <li class="task-item" cdkDrag>
+        <app-kanban-task-card (click)="isModalTaskOpen.set(true)" />
+      </li>
+    }
   </ul>
 </div>
 
@@ -63,5 +46,5 @@
 }
 
 @if(isModalTaskOpen()) {
-  <app-modal-task type="edit" (close)="isModalTaskOpen.set(false)"/>
+<app-modal-task type="edit" (close)="isModalTaskOpen.set(false)" />
 }

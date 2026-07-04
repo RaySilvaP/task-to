@@ -40,3 +40,7 @@
   justify-content: center;
   align-items: center;
 }
+
+.cdk-drag-placeholder {
+  opacity: 0;
+}
