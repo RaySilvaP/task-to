@@ -1,0 +1,23 @@
+CREATE TABLE IF NOT EXISTS context (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS kanban_column (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    position INTEGER NOT NULL,
+    context_id INTEGER NOT NULL,
+
+    CONSTRAINT fk_context FOREIGN KEY (context_id) REFERENCES context(id) ON DELETE RESTRICT
+);
+
+CREATE TABLE IF NOT EXISTS task (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    position INTEGER NOT NULL,
+    kanban_column_id INTEGER NOT NULL,
+    due TEXT,
+
+    CONSTRAINT fk_kanban_column FOREIGN KEY (kanban_column_id) REFERENCES kanban_column(id) ON DELETE RESTRICT
+);

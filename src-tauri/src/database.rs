@@ -1,3 +1,4 @@
+use migration::{Migrator, MigratorTrait};
 use sea_orm::{DatabaseConnection, DbErr};
 
 pub struct Database {
@@ -6,8 +7,10 @@ pub struct Database {
 
 impl Database {
     pub async fn new(path: &str) -> Result<Self, DbErr> {
+        let conn = sea_orm::Database::connect(&format!("sqlite://{path}?mode=rwc")).await?;
+        Migrator::up(&conn, None).await?;
         Ok(Self {
-            conn: sea_orm::Database::connect(&format!("sqlite://{path}?mode=rwc")).await?,
+            conn
         })
     }
 
