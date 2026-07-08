@@ -7,11 +7,11 @@ const DB_FILENAME: &str = "database.db";
 pub mod app;
 pub mod commands;
 pub mod database;
+pub mod dto;
+pub mod mappers;
 pub mod models;
 pub mod repositories;
 pub mod services;
-pub mod dto;
-pub mod mappers;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
@@ -27,7 +27,16 @@ pub fn run() {
             Ok(())
         })
         .plugin(tauri_plugin_opener::init())
-        .invoke_handler(tauri::generate_handler![commands::task::get_tasks])
+        .invoke_handler(tauri::generate_handler![
+            commands::kanban_column::get_kanban_columns,
+            commands::kanban_column::add_kanban_column,
+            commands::kanban_column::edit_kanban_column,
+            commands::context::get_contexts,
+            commands::context::add_context,
+            commands::context::edit_context,
+            commands::task::add_task,
+            commands::task::edit_task
+        ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

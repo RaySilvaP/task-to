@@ -1,7 +1,9 @@
 use crate::{
     database::Database,
-    repositories::{kanban_column::KanbanColumnRepository, task::TaskRepository},
-    services::{kanban_column::KanbanColumnService, task::TaskService},
+    repositories::{
+        context::ContextRepository, kanban_column::KanbanColumnRepository, task::TaskRepository,
+    },
+    services::{context::ContextService, kanban_column::KanbanColumnService, task::TaskService},
 };
 
 pub struct AppState {
@@ -19,5 +21,9 @@ impl AppState {
 
     pub fn kanban_column_service(&self) -> KanbanColumnService<'_> {
         KanbanColumnService::new(KanbanColumnRepository::new(&self.db))
+    }
+
+    pub fn context_service(&self) -> ContextService<'_> {
+        ContextService::new(ContextRepository::new(&self.db))
     }
 }

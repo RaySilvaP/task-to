@@ -1,11 +1,26 @@
-use crate::{dto::Task, models::task};
+use sea_orm::ActiveValue;
 
-pub fn model_to_dto(model: task::Model) -> Task {
-    Task {
+use crate::{
+    dto::task::{TaskRequest, TaskResponse},
+    models::task,
+};
+
+pub fn model_to_response(model: task::Model) -> TaskResponse {
+    TaskResponse {
         id: model.id,
         name: model.name,
         position: model.position,
         kanban_column_id: model.kanban_column_id,
         due: model.due,
+    }
+}
+
+pub fn request_to_active_model(request: TaskRequest) -> task::ActiveModel {
+    task::ActiveModel {
+        name: ActiveValue::Set(request.name),
+        position: ActiveValue::Set(request.position),
+        kanban_column_id: ActiveValue::Set(request.kanban_column_id),
+        due: ActiveValue::Set(request.due),
+        ..Default::default()
     }
 }

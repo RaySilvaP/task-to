@@ -1,9 +1,37 @@
 use tauri::State;
 
-use crate::{app::AppState, dto::KanbanColumn};
+use crate::{
+    app::AppState,
+    dto::kanban_column::{KanbanColumnRequest, KanbanColumnResponse},
+};
 
 #[tauri::command]
-pub async fn get_kanban_columns(context_id: u32, state: State<'_, AppState>) -> Result<Vec<KanbanColumn>, ()> {
-    let columns = state.kanban_column_service().get_columns(context_id).await;
+pub async fn get_kanban_columns(
+    context_id: u32,
+    state: State<'_, AppState>,
+) -> Result<Vec<KanbanColumnResponse>, ()> {
+    let columns = state.kanban_column_service().get(context_id).await;
     Ok(columns)
+}
+
+#[tauri::command]
+pub async fn add_kanban_column(
+    kanban_column: KanbanColumnRequest,
+    state: State<'_, AppState>,
+) -> Result<(), ()> {
+    state.kanban_column_service().add(kanban_column).await;
+    Ok(())
+}
+
+#[tauri::command]
+pub async fn edit_kanban_column(
+    kanban_column_id: i32,
+    kanban_column: KanbanColumnRequest,
+    state: State<'_, AppState>,
+) -> Result<(), ()> {
+    state
+        .kanban_column_service()
+        .edit(kanban_column_id, kanban_column)
+        .await;
+    Ok(())
 }
