@@ -1,9 +1,9 @@
 <div class="context-toolbar">
-  <select class="context-selector">
-    <option disabled selected>Select the context</option>
-    <option value="Work">Work</option>
-    <option value="School">School</option>
-    <option value="Personal">Personal</option>
+  <select class="context-selector" (change)="onSelectContext($event)">
+    <option disabled [selected]="selectedContext() === null">Select the context</option>
+    @for(context of contexts(); track context.id) {
+      <option [selected]="selectedContext()?.id === context.id" [value]="context.id">{{context.name}}</option>
+    }
   </select>
   <button type="button" (click)="isModalOpen.set(true)">Edit Context</button>
 </div>
@@ -12,11 +12,5 @@
 <app-kanban-action-button />
 
 @if(isModalOpen()) {
-  <app-modal title="Edit context" (close)="isModalOpen.set(false)">
-    <app-input-field label="Name" type="text"/>
-    <app-modal-footer modal-footer>
-      <app-button variant="danger">Delete</app-button>
-      <app-button variant="primary">Confirm</app-button>
-    </app-modal-footer>
-  </app-modal>
+  <app-modal-context [context]="selectedContext()" type="edit" (close)="isModalOpen.set(false)" (submit)="onEditContext($event)" (delete)="onDeleteContext($event)"/>
 }

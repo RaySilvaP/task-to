@@ -43,4 +43,11 @@ impl<'a> KanbanColumnRepository<'a> {
     pub async fn update(&self, column: kanban_column::ActiveModel) -> Result<kanban_column::Model, DbErr> {
         column.update(self.db.connection()).await
     }
+
+    pub async fn delete(&self, id: i32) -> Result<(), DbErr> {
+        kanban_column::Entity::delete_by_id(id)
+            .exec(self.db.connection())
+            .await?;
+        Ok(())
+    }
 }

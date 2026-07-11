@@ -1,0 +1,14 @@
+<app-modal [title]="type() == 'create' ? 'Create Context' : 'Edit Context'" (close)="close.emit()">
+  <form [formGroup]="contextForm">
+    <app-input-field label="Name" type="text" formControlName="name" />
+  </form>
+
+  <app-modal-footer modal-footer>
+    @if(type() === 'edit') {
+    <app-button (click)="onDelete()" variant="danger">Delete</app-button>
+    }
+    <app-button [disabled]="contextForm.invalid" (click)="onSubmitForm()" variant="primary">
+      Confirm
+    </app-button>
+  </app-modal-footer>
+</app-modal>

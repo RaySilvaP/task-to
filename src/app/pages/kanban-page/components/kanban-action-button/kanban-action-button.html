@@ -23,14 +23,6 @@
 }
 
 @case('context') {
-<app-modal title="Create Context" (close)="isModalOpen.set('none')">
-  <label class="form-field">
-    Name
-    <input type="text" name="context-name">
-  </label>
-  <app-modal-footer modal-footer>
-    <app-button>Confirm</app-button>
-  </app-modal-footer>
-</app-modal>
+  <app-modal-context (close)="isModalOpen.set('none')" (submit)="onCreateContext($event)"/>
 }
 }

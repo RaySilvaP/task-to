@@ -35,3 +35,9 @@ pub async fn edit_kanban_column(
         .await;
     Ok(())
 }
+
+#[tauri::command]
+pub async fn delete_kanban_column(kanban_column_id: i32, state: State<'_, AppState>) -> Result<(), ()> {
+    state.kanban_column_service().delete(kanban_column_id).await;
+    Ok(())
+}

@@ -1,4 +1,4 @@
-import { Component, forwardRef, input, output } from '@angular/core';
+import { Component, forwardRef, input, OnInit, output } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Component({
@@ -14,9 +14,9 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
     }
   ]
 })
-export class InputField implements ControlValueAccessor{
-  private onChange = (_: string) => {};
-  private onTouched = () => {};
+export class InputField implements ControlValueAccessor {
+  private onChange = (_: string) => { };
+  private onTouched = () => { };
 
   protected value = '';
   protected disabled = false;

@@ -26,3 +26,9 @@ pub async fn edit_context(
     state.context_service().edit(context_id, context).await;
     Ok(())
 }
+
+#[tauri::command]
+pub async fn delete_context(context_id: i32, state: State<'_, AppState>) -> Result<(), ()> {
+    state.context_service().delete(context_id).await;
+    Ok(())
+}

@@ -21,7 +21,7 @@ export class ModalTask {
     this.taskForm = this.fb.group({
       name: ['', Validators.required],
       due: ['']
-    })
+    });
   }
 
   protected onSubmitForm() {

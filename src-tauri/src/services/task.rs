@@ -1,6 +1,11 @@
 use sea_orm::ActiveValue;
 
-use crate::{dto::task::TaskRequest, mappers::task, models, repositories::task::TaskRepository};
+use crate::{
+    dto::task::{TaskRequest, TaskResponse},
+    mappers::task,
+    models,
+    repositories::task::TaskRepository,
+};
 
 pub struct TaskService<'a> {
     task_repository: TaskRepository<'a>,
@@ -9,6 +14,20 @@ pub struct TaskService<'a> {
 impl<'a> TaskService<'a> {
     pub fn new(task_repository: TaskRepository<'a>) -> Self {
         TaskService { task_repository }
+    }
+
+    pub async fn get(&self, kanban_column_id: i32) -> Vec<TaskResponse> {
+        println!("Getting tasks for kanban column: {kanban_column_id}...");
+
+        let tasks = self
+            .task_repository
+            .get(kanban_column_id)
+            .await
+            .unwrap();
+
+        println!("Tasks retrieved successfully.");
+
+        tasks.into_iter().map(task::model_to_response).collect()
     }
 
     pub async fn add(&self, request: TaskRequest) {
@@ -21,6 +40,14 @@ impl<'a> TaskService<'a> {
             .unwrap();
 
         println!("Task added successfully: {}", task.id);
+    }
+
+    pub async fn delete(&self, task_id: i32) {
+        println!("Deleting task: {task_id}...");
+
+        self.task_repository.delete(task_id).await.unwrap();
+
+        println!("Task deleted successfully.");
     }
 
     pub async fn edit(&self, task_id: i32, request: TaskRequest) {

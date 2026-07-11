@@ -30,4 +30,11 @@ impl<'a> ContextRepository<'a> {
     pub async fn update(&self, context: context::ActiveModel) -> Result<context::Model, DbErr> {
        context.update(self.db.connection()).await 
     }
+
+    pub async fn delete(&self, id: i32) -> Result<(), DbErr> {
+        context::Entity::delete_by_id(id)
+            .exec(self.db.connection())
+            .await?;
+        Ok(())
+    }
 }

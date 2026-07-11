@@ -70,4 +70,13 @@ impl<'a> KanbanColumnService<'a> {
             println!("Kanban column not found.");
         }
     }
+
+    pub async fn delete(&self, column_id: i32) {
+        println!("Deleting kanban column: {column_id}...");
+
+        self.kanban_column_repository.delete(column_id).await.unwrap();
+
+        println!("Kanban column deleted successfully.");
+    }
+
 }

@@ -58,4 +58,12 @@ impl<'a> ContextService<'a> {
             println!("Context not found.");
         }
     }
+
+    pub async fn delete(&self, context_id: i32) {
+        println!("Deleting context: {context_id}...");
+
+        self.context_repository.delete(context_id).await.unwrap();
+
+        println!("Context deleted successfully.");
+    }
 }

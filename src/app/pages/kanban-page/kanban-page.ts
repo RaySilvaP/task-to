@@ -1,17 +1,56 @@
-import { Component, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { KanbanBoard } from './components/kanban-board/kanban-board';
 import { KanbanActionButton } from './components/kanban-action-button/kanban-action-button';
-import { Modal } from "../../shared/components/modal/modal";
-import { ModalFooter } from "../../shared/components/modal-footer/modal-footer";
-import { Button } from "../../shared/components/button/button";
-import { InputField } from "../../shared/components/input-field/input-field";
+import { ContextService } from '../../services/context-service';
+import { ModalContext } from "./components/modal-context/modal-context";
+import Context from '../../models/context';
 
 @Component({
   selector: 'app-kanban-page',
-  imports: [KanbanBoard, KanbanActionButton, Modal, ModalFooter, Button, InputField],
+  imports: [KanbanBoard, KanbanActionButton, ModalContext],
   templateUrl: './kanban-page.html',
   styleUrl: './kanban-page.css',
+  providers: [ContextService]
 })
-export class KanbanPage {
+export class KanbanPage implements OnInit {
+  protected readonly contextService = inject(ContextService);
   protected isModalOpen = signal<boolean>(false);
+  protected contexts = this.contextService.contexts;
+  protected selectedContextId = this.contextService.getSelectedContext();
+
+  protected selectedContext = computed(() => this.contexts().find(c => c.id === this.selectedContextId()));
+
+  async ngOnInit(): Promise<void> {
+    await this.contextService.load();
+  }
+
+  protected onSelectContext(event: Event) {
+    const target = event.target as HTMLSelectElement;
+    const value = Number(target.value);
+    this.contextService.setSelectedContext(value);
+  }
+
+  protected async onEditContext(context: Context) {
+    await this.contextService.edit(context);
+  }
+
+  protected async onDeleteContext(contextId: number) {
+    console.log(contextId);
+    const contextIndex = this.contexts().findIndex(c => c.id === contextId);
+
+    await this.contextService.delete(contextId);
+    this.isModalOpen.set(false);
+
+    if (this.contexts().length > 0 && contextIndex === this.contexts().length) {
+      const previousContext = this.contexts().at(contextIndex - 1);
+      this.contextService.setSelectedContext(previousContext?.id ?? null);
+    }
+    else if (this.contexts().length > 0) {
+      const nextContext = this.contexts().at(contextIndex);
+      this.contextService.setSelectedContext(nextContext?.id ?? null);
+    }
+    else {
+      this.contextService.setSelectedContext(null);
+    }
+  }
 }
