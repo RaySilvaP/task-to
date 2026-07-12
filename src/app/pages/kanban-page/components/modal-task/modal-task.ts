@@ -1,9 +1,10 @@
-import { Component, inject, input, output } from '@angular/core';
+import { Component, inject, input, OnInit, output } from '@angular/core';
 import { Modal } from '../../../../shared/components/modal/modal';
 import { ModalFooter } from '../../../../shared/components/modal-footer/modal-footer';
 import { Button } from "../../../../shared/components/button/button";
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { InputField } from "../../../../shared/components/input-field/input-field";
+import Task from '../../../../models/task';
 
 @Component({
   selector: 'app-modal-task',
@@ -11,26 +12,47 @@ import { InputField } from "../../../../shared/components/input-field/input-fiel
   templateUrl: './modal-task.html',
   styleUrl: './modal-task.css',
 })
-export class ModalTask {
+export class ModalTask implements OnInit {
   private fb = inject(FormBuilder);
   protected taskForm: FormGroup;
   public type = input<'edit' | 'create'>('create');
+  public task = input<Task>();
   public close = output();
-  
+  public submit = output<Task>();
+
   constructor() {
     this.taskForm = this.fb.group({
       name: ['', Validators.required],
-      due: ['']
+      due: []
     });
   }
 
+  ngOnInit(): void {
+    this.taskForm.patchValue(
+      {
+        name: this.task()?.name ?? '',
+        due: this.task()?.due
+      },
+      { emitEvent: false }
+    );
+  }
+
   protected onSubmitForm() {
-    if(this.taskForm.invalid)
+    if (this.taskForm.invalid)
       return;
 
-    const {name} = this.taskForm.value;
+    const { name, due } = this.taskForm.value;
     console.log(name);
     this.taskForm.reset();
-    this.close.emit();
+
+    const task = {
+      id: this.task()?.id ?? -1,
+      name,
+      due,
+      kanban_column_id: this.task()?.kanban_column_id ?? -1,
+      position: this.task()?.position ?? 1,
+    } as Task;
+
+    this.submit.emit(task);
   }
 }

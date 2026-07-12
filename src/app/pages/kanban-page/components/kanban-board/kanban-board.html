@@ -1,50 +1,35 @@
-<div class="kanban-column">
-  <div class="column-header">
-    <h4 class="column-name">Column name</h4>
-    <span class="column-task-count">0</span>
-    <button class="column-options" type="button" (click)="isModalColumnOpen.set(true)">ops</button>
-  </div>
+<ul class="column-list" cdkDropList cdkDropListGroup cdkDropListOrientation="horizontal" (cdkDropListDropped)="dropKanbanColumn($event)">
+  @for(kanbanColumn of kanbanColumns(); track kanbanColumn.id) {
+    <li class="column-item" cdkDrag cdkDragLockAxis="x">
+      <div class="kanban-column">
+        <div class="column-header" cdkDragHandle>
+          <h4 class="column-name">{{kanbanColumn.name}}</h4>
+          <span class="column-task-count">{{kanbanColumn.tasks.length}}</span>
+          <button class="column-options" type="button" (click)="modalKanbanColumnOpen.set(kanbanColumn)">ops</button>
+        </div>
 
-  <ul class="task-list" cdkDropList (cdkDropListDropped)="drop($event)" #todoList="cdkDropList" [cdkDropListData]="tasks" [cdkDropListConnectedTo]="[doneList]">
-    @for(task of tasks; track task) {
-      <li class="task-item" cdkDrag>
-        <app-kanban-task-card (click)="isModalTaskOpen.set(true)" />
-      </li>
-    }
-  </ul>
-</div>
+        <ul class="task-list" cdkDropList [cdkDropListData]="kanbanColumn.tasks" (cdkDropListDropped)="dropTask($event)">
+          @for(task of kanbanColumn.tasks; track task.id) {
+            <li class="task-item" cdkDrag>
+              <app-kanban-task-card [task]="task" (click)="modalTaskOpen.set(task)" />
+            </li>
+          }
+        </ul>
+      </div>
+    </li>
+  }
+</ul>
 
-<div class="kanban-column">
-  <div class="column-header">
-    <h4 class="column-name">Column name</h4>
-    <span class="column-task-count">0</span>
-    <button class="column-options" type="button" (click)="isModalColumnOpen.set(true)">ops</button>
-  </div>
-
-  <ul class="task-list" cdkDropList (cdkDropListDropped)="drop($event)" #doneList="cdkDropList" [cdkDropListData]="tasks1" [cdkDropListConnectedTo]="[todoList]">
-    @for(task of tasks1; track task) {
-      <li class="task-item" cdkDrag>
-        <app-kanban-task-card (click)="isModalTaskOpen.set(true)" />
-      </li>
-    }
-  </ul>
-</div>
-
-@if(isModalColumnOpen()) {
-<app-modal title="Edit column" (close)="isModalColumnOpen.set(false)">
-  <div class="column-form">
-    <label>
-      Name:
-      <input type="text" name="column-name">
-    </label>
-  </div>
-  <app-modal-footer modal-footer>
-    <app-button variant="danger" (click)="onDeleteColumn()">Delete</app-button>
-    <app-button variant="primary" (click)="onSaveColumn()">Save</app-button>
-  </app-modal-footer>
-</app-modal>
+@if(modalKanbanColumnOpen() !== null) {
+<app-modal-kanban-column 
+  [kanbanColumn]="modalKanbanColumnOpen() ?? undefined" 
+  type="edit" 
+  (close)="modalKanbanColumnOpen.set(null)"
+  (submit)="onEditColumn($event)"
+  (delete)="onDeleteColumn($event)"
+/>
 }
 
-@if(isModalTaskOpen()) {
-<app-modal-task type="edit" (close)="isModalTaskOpen.set(false)" />
+@if(modalTaskOpen() !== null) {
+<app-modal-task [task]="modalTaskOpen() ?? undefined" type="edit" (close)="modalTaskOpen.set(null)" (submit)="onEditTask($event)" />
 }

@@ -4,16 +4,19 @@ import { KanbanActionButton } from './components/kanban-action-button/kanban-act
 import { ContextService } from '../../services/context-service';
 import { ModalContext } from "./components/modal-context/modal-context";
 import Context from '../../models/context';
+import { KanbanColumnService } from '../../services/kanban-column-service';
+import { TaskService } from '../../services/task-service';
 
 @Component({
   selector: 'app-kanban-page',
   imports: [KanbanBoard, KanbanActionButton, ModalContext],
   templateUrl: './kanban-page.html',
   styleUrl: './kanban-page.css',
-  providers: [ContextService]
+  providers: [ContextService, KanbanColumnService, TaskService]
 })
 export class KanbanPage implements OnInit {
   protected readonly contextService = inject(ContextService);
+  protected readonly kanbanColumnService = inject(KanbanColumnService);
   protected isModalOpen = signal<boolean>(false);
   protected contexts = this.contextService.contexts;
   protected selectedContextId = this.contextService.getSelectedContext();
@@ -28,10 +31,12 @@ export class KanbanPage implements OnInit {
     const target = event.target as HTMLSelectElement;
     const value = Number(target.value);
     this.contextService.setSelectedContext(value);
+    this.kanbanColumnService.load(value);
   }
 
   protected async onEditContext(context: Context) {
     await this.contextService.edit(context);
+    this.isModalOpen.set(false);
   }
 
   protected async onDeleteContext(contextId: number) {

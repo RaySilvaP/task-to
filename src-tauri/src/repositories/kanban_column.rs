@@ -1,4 +1,6 @@
-use sea_orm::{ActiveModelTrait, ColumnTrait, DbErr, EntityTrait, QueryFilter};
+use sea_orm::{
+    ActiveModelTrait, ColumnTrait, DbErr, EntityTrait, Order, QueryFilter, QueryOrder,
+};
 
 use crate::{
     database::Database,
@@ -26,9 +28,18 @@ impl<'a> KanbanColumnRepository<'a> {
     ) -> Result<Vec<(kanban_column::Model, Vec<task::Model>)>, DbErr> {
         let columns = kanban_column::Entity::find()
             .filter(kanban_column::Column::ContextId.eq(context_id))
+            .order_by(kanban_column::Column::Position, Order::Asc)
             .find_with_related(task::Entity)
             .all(self.db.connection())
             .await?;
+
+        let columns = columns
+            .into_iter()
+            .map(|(column, mut tasks)| {
+                tasks.sort_by_key(|t| t.position);
+                (column, tasks)
+            })
+            .collect();
 
         Ok(columns)
     }

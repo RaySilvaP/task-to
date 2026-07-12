@@ -12,5 +12,11 @@
 <app-kanban-action-button />
 
 @if(isModalOpen()) {
-  <app-modal-context [context]="selectedContext()" type="edit" (close)="isModalOpen.set(false)" (submit)="onEditContext($event)" (delete)="onDeleteContext($event)"/>
+  <app-modal-context 
+    [context]="selectedContext()" 
+    type="edit" 
+    (close)="isModalOpen.set(false)" 
+    (submit)="onEditContext($event)" 
+    (delete)="onDeleteContext($event)"
+  />
 }

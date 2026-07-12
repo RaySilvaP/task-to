@@ -7,19 +7,11 @@
 
 @switch(isModalOpen()) {
 @case('task') {
-<app-modal-task type="create" (close)="isModalOpen.set('none')" />
+<app-modal-task (close)="isModalOpen.set('none')" (submit)="onCreateTask($event)" />
 }
 
 @case('column') {
-<app-modal title="Create Kanban Column" (close)="isModalOpen.set('none')">
-  <label class="form-field">
-    Name
-    <input type="text" name="column-name">
-  </label>
-  <app-modal-footer modal-footer>
-    <app-button>Confirm</app-button>
-  </app-modal-footer>
-</app-modal>
+<app-modal-kanban-column (close)="isModalOpen.set('none')" (submit)="onCreateKanbanColumn($event)"/>
 }
 
 @case('context') {
