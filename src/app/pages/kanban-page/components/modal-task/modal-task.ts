@@ -19,6 +19,7 @@ export class ModalTask implements OnInit {
   public task = input<Task>();
   public close = output();
   public submit = output<Task>();
+  public delete = output<number>();
 
   constructor() {
     this.taskForm = this.fb.group({
@@ -54,5 +55,9 @@ export class ModalTask implements OnInit {
     } as Task;
 
     this.submit.emit(task);
+  }
+
+  protected onDelete() {
+    this.delete.emit(this.task()!.id);
   }
 }

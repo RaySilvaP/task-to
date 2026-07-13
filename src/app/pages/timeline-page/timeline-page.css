@@ -1,0 +1,39 @@
+.timeline-hours {
+  display: flex;
+  flex-direction: column;
+  height: 100px;
+  overflow-y: auto;
+  gap: 58px;
+}
+
+.hour-mark {
+  display: flex;
+  align-items: center;
+  position: relative;
+  padding-left: 1rem;
+}
+
+.hour-number {
+  position: absolute;
+  text-align: right;
+  color: gray;
+  left: 0;
+}
+
+.hour-line {
+  background-color: black;
+  height: 2px;
+  width: 100%;
+}
+
+.hour-mark:first-of-type, .hour-mark:last-of-type {
+  opacity: 0;
+}
+
+.time-block {
+  position: absolute;
+  background-color: wheat;
+  width: calc(100% - 2rem);
+  left: 1.5rem;
+  min-height: 40px;
+}

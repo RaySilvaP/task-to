@@ -1,0 +1,22 @@
+<div #timeline class="timeline-hours">
+  @for(hour of hours; track hour) {
+    <div class="hour-mark">
+      <span class="hour-number">{{hour}}</span>
+      <div class="hour-line"></div>
+    </div>
+  }
+
+  <div 
+    class="time-block" 
+    cdkDrag 
+    cdkDragBoundary=".timeline-hours" 
+    cdkDragLockAxis="y" 
+    [cdkDragConstrainPosition]="contrainPosition"
+    (cdkDragEnded)="onDragEnd($event)"
+    (cdkDragMoved)="onDragMove($event)"
+    [style.height.px]="block().duration * pixelsPerMinute"
+  >
+    fazer alguma coisa
+  </div>
+</div>
+

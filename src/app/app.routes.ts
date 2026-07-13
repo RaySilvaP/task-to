@@ -1,5 +1,6 @@
 import { Routes } from "@angular/router";
 import { KanbanPage } from "./pages/kanban-page/kanban-page";
+import { TimelinePage } from "./pages/timeline-page/timeline-page";
 
 export const routes: Routes = [
   {
@@ -8,7 +9,12 @@ export const routes: Routes = [
     title: 'Kanban'
   },
   {
+    path: 'timeline',
+    component: TimelinePage,
+    title: 'Timeline'
+  },
+  {
     path: '**',
-    redirectTo: '/kanban'
+    redirectTo: '/timeline'
   }
 ];

@@ -53,6 +53,6 @@ export class ModalKanbanColumn {
   }
 
   protected onDelete() {
-    this.delete.emit(this.kanbanColumn()?.id ?? -1);
+    this.delete.emit(this.kanbanColumn()!.id);
   }
 }

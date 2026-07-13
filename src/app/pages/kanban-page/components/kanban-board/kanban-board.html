@@ -8,7 +8,7 @@
           <button class="column-options" type="button" (click)="modalKanbanColumnOpen.set(kanbanColumn)">ops</button>
         </div>
 
-        <ul class="task-list" cdkDropList [cdkDropListData]="kanbanColumn.tasks" (cdkDropListDropped)="dropTask($event)">
+        <ul class="task-list" cdkDropList [cdkDropListData]="kanbanColumn.tasks" (cdkDropListDropped)="dropTask($event, kanbanColumn.id)">
           @for(task of kanbanColumn.tasks; track task.id) {
             <li class="task-item" cdkDrag>
               <app-kanban-task-card [task]="task" (click)="modalTaskOpen.set(task)" />
@@ -31,5 +31,5 @@
 }
 
 @if(modalTaskOpen() !== null) {
-<app-modal-task [task]="modalTaskOpen() ?? undefined" type="edit" (close)="modalTaskOpen.set(null)" (submit)="onEditTask($event)" />
+<app-modal-task [task]="modalTaskOpen() ?? undefined" type="edit" (close)="modalTaskOpen.set(null)" (submit)="onEditTask($event)" (delete)="onDeleteTask($event)" />
 }

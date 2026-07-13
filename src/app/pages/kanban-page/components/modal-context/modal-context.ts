@@ -46,6 +46,6 @@ export class ModalContext implements OnInit {
   }
 
   protected onDelete() {
-    this.delete.emit(this.context()?.id ?? -1);
+    this.delete.emit(this.context()!.id);
   }
 }

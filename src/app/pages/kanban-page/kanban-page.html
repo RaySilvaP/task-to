@@ -1,11 +1,13 @@
 <div class="context-toolbar">
   <select class="context-selector" (change)="onSelectContext($event)">
-    <option disabled [selected]="selectedContext() === null">Select the context</option>
+    <option disabled [selected]="!selectedContext()">Select the context</option>
     @for(context of contexts(); track context.id) {
       <option [selected]="selectedContext()?.id === context.id" [value]="context.id">{{context.name}}</option>
     }
   </select>
-  <button type="button" (click)="isModalOpen.set(true)">Edit Context</button>
+  @if(selectedContext()) {
+    <button type="button" (click)="isModalOpen.set(true)">Edit Context</button>
+  }
 </div>
 
 <app-kanban-board />

@@ -3,6 +3,7 @@ use tauri::State;
 use crate::{
     app::AppState,
     dto::task::{TaskRequest, TaskResponse},
+    models::OrderRequest,
 };
 
 #[tauri::command]
@@ -27,6 +28,12 @@ pub async fn edit_task(
     state: State<'_, AppState>,
 ) -> Result<(), ()> {
     state.task_service().edit(task_id, task).await;
+    Ok(())
+}
+
+#[tauri::command]
+pub async fn order_tasks(kanban_column_id: i32, orders: Vec<OrderRequest>, state: State<'_, AppState>) -> Result<(), ()> {
+    state.task_service().order(kanban_column_id, orders).await;
     Ok(())
 }
 

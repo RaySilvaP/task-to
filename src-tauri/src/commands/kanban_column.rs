@@ -1,8 +1,7 @@
 use tauri::State;
 
 use crate::{
-    app::AppState,
-    dto::kanban_column::{KanbanColumnRequest, KanbanColumnResponse},
+    app::AppState, dto::kanban_column::{KanbanColumnRequest, KanbanColumnResponse}, models::OrderRequest,
 };
 
 #[tauri::command]
@@ -33,6 +32,12 @@ pub async fn edit_kanban_column(
         .kanban_column_service()
         .edit(kanban_column_id, kanban_column)
         .await;
+    Ok(())
+}
+
+#[tauri::command]
+pub async fn order_kanban_columns(context_id: u32, orders: Vec<OrderRequest>, state: State<'_, AppState>) -> Result<(), ()> {
+    state.kanban_column_service().order(context_id, orders).await;
     Ok(())
 }
 

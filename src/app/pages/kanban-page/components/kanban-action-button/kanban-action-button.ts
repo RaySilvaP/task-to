@@ -38,11 +38,14 @@ export class KanbanActionButton {
 
     await this.taskService.add(task);
     this.kanbanColumnService.load(selectedContextId);
+    this.isModalOpen.set('none');
+    this.isOpen.set(false);
   }
 
   protected async onCreateContext(context: Context) {
     await this.contextService.add(context.name);
     this.isModalOpen.set('none');
+    this.isOpen.set(false);
   }
 
   protected async onCreateKanbanColumn(kanbanColumn: KanbanColumn) {
@@ -56,5 +59,6 @@ export class KanbanActionButton {
 
     await this.kanbanColumnService.add(kanbanColumn);
     this.isModalOpen.set('none');
+    this.isOpen.set(false);
   }
 }

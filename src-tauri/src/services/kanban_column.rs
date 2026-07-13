@@ -1,7 +1,12 @@
+use std::collections::HashMap;
+
 use sea_orm::ActiveValue;
 
 use crate::{
-    dto::kanban_column::{KanbanColumnRequest, KanbanColumnResponse}, mappers::{kanban_column, task}, models, repositories::kanban_column::KanbanColumnRepository,
+    dto::kanban_column::{KanbanColumnRequest, KanbanColumnResponse},
+    mappers::{kanban_column, task},
+    models::{self, OrderRequest},
+    repositories::kanban_column::KanbanColumnRepository,
 };
 
 pub struct KanbanColumnService<'a> {
@@ -62,21 +67,52 @@ impl<'a> KanbanColumnService<'a> {
             active_model.name = ActiveValue::Set(request.name);
             active_model.position = ActiveValue::Set(request.position);
 
-            self.kanban_column_repository.update(active_model).await.unwrap();
+            self.kanban_column_repository
+                .update(active_model)
+                .await
+                .unwrap();
 
             println!("Kanban column edited successfully.");
-        }
-        else {
+        } else {
             println!("Kanban column not found.");
         }
+    }
+
+    pub async fn order(&self, context_id: u32, orders: Vec<OrderRequest>) {
+        println!("Updating kanban column order for context: {context_id}...");
+
+        let columns = self.kanban_column_repository.get(context_id).await.unwrap();
+
+        let order_map: HashMap<i32, i32> = orders.into_iter()
+            .map(|order| (order.id, order.position)).collect();
+
+        let columns: Vec<models::kanban_column::ActiveModel> = columns
+            .into_iter()
+            .map(|(column, _)| match order_map.get(&column.id) {
+                Some(position) => {
+                    let mut active_model: models::kanban_column::ActiveModel = column.into();
+                    active_model.position = ActiveValue::Set(*position);
+                    active_model
+                }
+                None => column.into(),
+            })
+            .collect();
+
+        println!("Updating column positions in DB...");
+
+        self.kanban_column_repository.update_order(columns).await.unwrap();
+
+        println!("Kanban column order updated successfully.");
     }
 
     pub async fn delete(&self, column_id: i32) {
         println!("Deleting kanban column: {column_id}...");
 
-        self.kanban_column_repository.delete(column_id).await.unwrap();
+        self.kanban_column_repository
+            .delete(column_id)
+            .await
+            .unwrap();
 
         println!("Kanban column deleted successfully.");
     }
-
 }

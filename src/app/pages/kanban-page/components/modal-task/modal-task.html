@@ -6,7 +6,7 @@
 
   <app-modal-footer modal-footer>
     @if(type() === 'edit') {
-    <app-button variant="danger">Delete</app-button>
+    <app-button (click)="onDelete()" variant="danger">Delete</app-button>
     }
     <app-button [disabled]="taskForm.invalid" (click)="onSubmitForm()" variant="primary">Confirm</app-button>
   </app-modal-footer>

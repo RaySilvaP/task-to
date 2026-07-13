@@ -1,4 +1,4 @@
-use sea_orm::{ActiveModelTrait, ColumnTrait, DbErr, EntityTrait, QueryFilter};
+use sea_orm::{ActiveModelTrait, ColumnTrait, DbErr, EntityTrait, QueryFilter, TransactionTrait};
 
 use crate::{database::Database, models::task};
 
@@ -28,6 +28,16 @@ impl<'a> TaskRepository<'a> {
 
     pub async fn update(&self, task: task::ActiveModel) -> Result<task::Model, DbErr> {
         task.update(self.db.connection()).await
+    }
+
+    pub async fn update_order(&self, tasks: Vec<task::ActiveModel>) -> Result<(), DbErr> {
+        let txn = self.db.connection().begin().await?;
+
+        for task in tasks {
+            task.update(&txn).await?;
+        }
+
+        txn.commit().await
     }
 
     pub async fn delete(&self, id: i32) -> Result<(), DbErr> {

@@ -1,6 +1,7 @@
 import { Injectable, signal } from '@angular/core';
 import KanbanColumn from '../models/kanban-column';
 import { invoke } from '@tauri-apps/api/core';
+import Order from '../models/order';
 
 @Injectable()
 export class KanbanColumnService {
@@ -20,6 +21,12 @@ export class KanbanColumnService {
   public async edit(kanbanColumn: KanbanColumn) {
     await invoke('edit_kanban_column', { kanbanColumnId: kanbanColumn.id, kanbanColumn });
     await this.load(kanbanColumn.context_id);
+  }
+
+  public async order(contextId: number, orders: Order[]) {
+    console.log(orders)
+    await invoke('order_kanban_columns', {contextId, orders});
+    await this.load(contextId);
   }
 
   public async delete(kanbanColumnId: number, contextId: number) {

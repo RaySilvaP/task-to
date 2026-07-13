@@ -1,5 +1,5 @@
 use sea_orm::{
-    ActiveModelTrait, ColumnTrait, DbErr, EntityTrait, Order, QueryFilter, QueryOrder,
+    ActiveModelTrait, ColumnTrait, DbErr, EntityTrait, Order, QueryFilter, QueryOrder, TransactionTrait,
 };
 
 use crate::{
@@ -53,6 +53,16 @@ impl<'a> KanbanColumnRepository<'a> {
 
     pub async fn update(&self, column: kanban_column::ActiveModel) -> Result<kanban_column::Model, DbErr> {
         column.update(self.db.connection()).await
+    }
+
+    pub async fn update_order(&self, columns: Vec<kanban_column::ActiveModel>) -> Result<(), DbErr> {
+        let txn = self.db.connection().begin().await?;
+
+        for column in columns {
+            column.update(&txn).await?;
+        }
+
+        txn.commit().await
     }
 
     pub async fn delete(&self, id: i32) -> Result<(), DbErr> {

@@ -8,6 +8,7 @@ import { ModalKanbanColumn } from "../modal-kanban-column/modal-kanban-column";
 import KanbanColumn from '../../../../models/kanban-column';
 import Task from '../../../../models/task';
 import { TaskService } from '../../../../services/task-service';
+import { Position } from '@tauri-apps/api/dpi';
 
 @Component({
   selector: 'app-kanban-board',
@@ -55,6 +56,12 @@ export class KanbanBoard implements OnInit {
     this.kanbanColumnService.load(selectedContextId);
   }
 
+  protected async onDeleteTask(taskId: number) {
+    await this.taskService.delete(taskId);
+    this.kanbanColumnService.load(this.selectedContextId()!);
+    this.modalTaskOpen.set(null);
+  }
+
   protected async dropKanbanColumn(event: CdkDragDrop<KanbanColumn[]>) {
     const columns = this.kanbanColumns();
     const kanbanColumn1 = columns.at(event.previousIndex)!;
@@ -65,16 +72,10 @@ export class KanbanBoard implements OnInit {
     kanbanColumn1.position = event.currentIndex + 1;
     kanbanColumn2.position = event.previousIndex + 1;
 
-    await this.kanbanColumnService.edit(kanbanColumn1);
-    await this.kanbanColumnService.edit(kanbanColumn2);
+    this.kanbanColumnService.order(this.selectedContextId()!, [kanbanColumn1, kanbanColumn2]);
   }
 
-  protected async dropTask(event: CdkDragDrop<Task[]>) {
-    const task1 = event.previousContainer.data.at(event.previousIndex)!;
-    const task2 = event.container.data.at(event.currentIndex)!;
-    console.log(task1);
-    console.log(task2);
-
+  protected async dropTask(event: CdkDragDrop<Task[]>, kanbanColumnId: number) {
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {
@@ -86,12 +87,22 @@ export class KanbanBoard implements OnInit {
       );
     }
 
-    return;
-    task1.position = event.currentIndex + 1;
-    task2.position = event.previousIndex + 1;
+    const task = event.container.data.at(event.currentIndex)!;
+    const previousOrdered = this.orderTasks(event.previousContainer.data);
+    const currentOrdered = this.orderTasks(event.container.data);
 
-    await this.taskService.edit(task1);
-    await this.taskService.edit(task2);
-    await this.kanbanColumnService.load(this.selectedContextId()!);
+    const previousColumnId = task.kanban_column_id;
+    task.kanban_column_id = kanbanColumnId;
+
+    this.taskService.edit(task);
+    this.taskService.order(previousColumnId, previousOrdered);
+    this.taskService.order(kanbanColumnId, currentOrdered);
+  }
+
+  private orderTasks(tasks: Task[]): Task[] {
+    return tasks.map((task, index) => {
+      task.position = index + 1;
+      return task;
+    });
   }
 }

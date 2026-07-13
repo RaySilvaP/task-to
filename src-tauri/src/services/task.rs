@@ -1,9 +1,11 @@
+use std::collections::HashMap;
+
 use sea_orm::ActiveValue;
 
 use crate::{
     dto::task::{TaskRequest, TaskResponse},
     mappers::task,
-    models,
+    models::{self, OrderRequest},
     repositories::task::TaskRepository,
 };
 
@@ -67,5 +69,36 @@ impl<'a> TaskService<'a> {
         } else {
             println!("Task not found");
         }
+    }
+
+    pub async fn order(&self, kanban_column_id: i32, orders: Vec<OrderRequest>) {
+        println!("Updating task order for kanban column: {kanban_column_id}...");
+
+        let tasks = self.task_repository.get(kanban_column_id).await.unwrap();
+
+        let order_map: HashMap<i32, i32> = orders
+            .into_iter()
+            .map(|order| (order.id, order.position))
+            .collect();
+
+        println!("Order map: {:?}", order_map);
+
+        let tasks: Vec<models::task::ActiveModel> = tasks
+            .into_iter()
+            .map(|task| match order_map.get(&task.id) {
+                Some(position) => {
+                    let mut active_model: models::task::ActiveModel = task.into();
+                    active_model.position = ActiveValue::Set(*position);
+                    active_model
+                }
+                None => task.into(),
+            })
+            .collect();
+
+        println!("Updating task positions in DB...");
+
+        self.task_repository.update_order(tasks).await.unwrap();
+
+        println!("Task order updated successfully.");
     }
 }

@@ -31,14 +31,15 @@ pub fn run() {
             commands::kanban_column::get_kanban_columns,
             commands::kanban_column::add_kanban_column,
             commands::kanban_column::edit_kanban_column,
+            commands::kanban_column::order_kanban_columns,
             commands::kanban_column::delete_kanban_column,
             commands::context::get_contexts,
             commands::context::add_context,
             commands::context::edit_context,
             commands::context::delete_context,
-            commands::task::get_tasks,
             commands::task::add_task,
             commands::task::edit_task,
+            commands::task::order_tasks,
             commands::task::delete_task
         ])
         .run(tauri::generate_context!())

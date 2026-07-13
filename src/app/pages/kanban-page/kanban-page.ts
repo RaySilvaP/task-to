@@ -25,6 +25,7 @@ export class KanbanPage implements OnInit {
 
   async ngOnInit(): Promise<void> {
     await this.contextService.load();
+    console.log(this.selectedContext())
   }
 
   protected onSelectContext(event: Event) {
