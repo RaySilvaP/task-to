@@ -1,9 +1,16 @@
-.timeline-hours {
+.timeline-container {
+  position: relative;
+}
+
+.timeline-wrapper {
   display: flex;
   flex-direction: column;
-  height: 100px;
-  overflow-y: auto;
   gap: 58px;
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  left: 0;
+  top: 0;
 }
 
 .hour-mark {
