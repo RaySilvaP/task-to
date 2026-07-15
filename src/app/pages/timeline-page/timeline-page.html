@@ -1,9 +1,14 @@
+<div class="calendar">
+  <span class="calendar-day">{{ today | date:'d' }}</span>
+  <span class="calendar-info">{{ today | date:'EEE' }} {{ today | date:'MMMM' }}</span>
+</div>
+
 <div
   #timeline
   class="timeline-container"
   [style.height.px]="24 * 60 * pixelsPerMinute"
 >
-  <div class="timeline-wrapper">
+  <div class="timeline-wrapper" [style.gap.px]="60 * pixelsPerMinute - 2">
     @for(hour of hours; track hour) {
       <div class="hour-mark">
         <span class="hour-number">{{hour}}</span>
@@ -13,16 +18,23 @@
   </div>
 
   <div
-  class="time-block"
-  cdkDrag
-  cdkDragBoundary=".timeline-container"
-  cdkDragLockAxis="y"
-  [cdkDragConstrainPosition]="contrainPosition(pixelsPerMinute)"
-  (cdkDragEnded)="onDragEnd($event)"
-  [style.top.px]="block().start * pixelsPerMinute"
-  [style.height.px]="block().duration * pixelsPerMinute"
-  >
-  fazer alguma coisa
+    class="time-block"
+    cdkDrag
+    cdkDragBoundary=".timeline-container"
+    cdkDragLockAxis="y"
+    [cdkDragConstrainPosition]="contrainPosition(pixelsPerMinute)"
+    (cdkDragEnded)="onDragEnd($event)"
+    [style.top.px]="block().start * pixelsPerMinute"
+    [style.height.px]="block().duration * pixelsPerMinute"
+    >
+    <div class="time-block-body" cdkDragHandle>
+      <span>Fazer alguma coisa</span>
+    </div>
+    <div
+      #resizeHandle
+      class="resize-handle"
+      (pointerdown)="onResizePointerDown($event)"
+    ></div>
   </div>
 </div>
 
