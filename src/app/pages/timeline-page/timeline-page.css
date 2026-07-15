@@ -1,5 +1,6 @@
 .timeline-container {
   position: relative;
+  touch-action: pan-y;
 }
 
 .timeline-wrapper {

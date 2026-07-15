@@ -1,12 +1,14 @@
-<div class="calendar">
-  <span class="calendar-day">{{ today | date:'d' }}</span>
-  <span class="calendar-info">{{ today | date:'EEE' }} {{ today | date:'MMMM' }}</span>
+<div class="calendar" (click)="resetDate()">
+  <span class="calendar-day">{{ today() | date:'d' }}</span>
+  <span class="calendar-info">{{ today() | date:'EEE' }} {{ today() | date:'MMMM' }}</span>
 </div>
 
 <div
   #timeline
   class="timeline-container"
   [style.height.px]="24 * 60 * pixelsPerMinute"
+  (pointerdown)="onPointerDown($event)"
+  (pointerup)="onPointerUp($event)"
 >
   <div class="timeline-wrapper" [style.gap.px]="60 * pixelsPerMinute - 2">
     @for(hour of hours; track hour) {

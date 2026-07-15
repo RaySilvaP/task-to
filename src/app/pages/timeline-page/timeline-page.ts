@@ -11,12 +11,66 @@ import { Component, ElementRef, signal, ViewChild } from '@angular/core';
 export class TimelinePage {
   protected hours = Array.from({ length: 25 }, (_, i) => i);
   protected pixelsPerMinute = 0.75;
-  protected today = new Date(Date.now())
+  protected today = signal<Date>(new Date(Date.now()));
   @ViewChild('timeline') timeline!: ElementRef<HTMLDivElement>;
   protected block = signal<{ start: number, duration: number }>({
     start: 900,
     duration: 60
   });
+  @ViewChild('resizeHandle') resizeHandle!: ElementRef<HTMLDivElement>;
+  private resizeData: { startY: number; startDuration: number } | null = null;
+
+  private startX = 0;
+  private startY = 0;
+  private isDraggingBlock = false;
+
+  protected resetDate() {
+    this.today.set(new Date(Date.now()));
+  }
+
+  protected onPointerDown(event: PointerEvent) {
+    const target = event.target as HTMLElement;
+    this.isDraggingBlock = !!target.closest('.cdk-drag');
+
+    if (this.isDraggingBlock) {
+      return;
+    }
+
+    console.log("pointer down");
+    console.log(`${event.clientX} - ${event.clientY}`);
+
+    this.startX = event.clientX;
+    this.startY = event.clientY;
+  }
+
+  protected onPointerUp(event: PointerEvent) {
+    if(this.isDraggingBlock)
+      return;
+
+    console.log("pointer up")
+    console.log(`${event.clientX} - ${event.clientY}`)
+    const deltaX = event.clientX - this.startX;
+    const deltaY = event.clientY - this.startY;
+
+    const threshold = 50;
+
+    if (
+      Math.abs(deltaX) > threshold &&
+      Math.abs(deltaX) > Math.abs(deltaY)
+    ) {
+      if (deltaX > 0) {
+        console.log('Swipe right');
+        const date = new Date(this.today());
+        date.setDate(date.getDate() - 1)
+        this.today.set(date);
+      } else {
+        console.log('Swipe left');
+        const date = new Date(this.today());
+        date.setDate(date.getDate() + 1)
+        this.today.set(date);
+      }
+    }
+  }
 
   protected contrainPosition(pixelsPerMinute: number): (
     userPointerPosition: Point,
@@ -48,10 +102,6 @@ export class TimelinePage {
     event.source.reset();
   }
 
-  @ViewChild('resizeHandle') resizeHandle!: ElementRef<HTMLDivElement>;
-
-  private resizeData: { startY: number; startDuration: number } | null = null;
-
   protected onResizePointerDown(event: PointerEvent) {
     event.stopPropagation();
     event.preventDefault();
@@ -73,7 +123,6 @@ export class TimelinePage {
         start: this.block().start,
         duration: Math.max(grid, newDuration),
       });
-      console.log(this.block());
     };
 
     const onUp = (e: PointerEvent) => {
