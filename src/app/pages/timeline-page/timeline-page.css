@@ -17,12 +17,13 @@
   display: flex;
   align-items: center;
   position: relative;
-  padding-left: 1rem;
+  padding-left: 1.5rem;
 }
 
 .hour-number {
   position: absolute;
   text-align: right;
+  width: 1rem;
   color: gray;
   left: 0;
 }
@@ -40,8 +41,7 @@
 .time-block {
   position: absolute;
   background-color: wheat;
-  width: calc(100% - 2rem);
-  left: 1.5rem;
+  width: 100%;
   touch-action: none;
 }
 
@@ -85,4 +85,11 @@
 
 .calendar-day {
   font-size: 2rem;
+}
+
+.time-block-container {
+  position: absolute;
+  left: 1.5rem;
+  height: 100%;
+  width: calc(100% - 1.5rem);
 }

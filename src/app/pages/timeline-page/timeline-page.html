@@ -19,24 +19,31 @@
     }
   </div>
 
-  <div
-    class="time-block"
-    cdkDrag
-    cdkDragBoundary=".timeline-container"
-    cdkDragLockAxis="y"
-    [cdkDragConstrainPosition]="contrainPosition(pixelsPerMinute)"
-    (cdkDragEnded)="onDragEnd($event)"
-    [style.top.px]="block().start * pixelsPerMinute"
-    [style.height.px]="block().duration * pixelsPerMinute"
-    >
-    <div class="time-block-body" cdkDragHandle>
-      <span>Fazer alguma coisa</span>
-    </div>
-    <div
-      #resizeHandle
-      class="resize-handle"
-      (pointerdown)="onResizePointerDown($event)"
-    ></div>
+  <div #timeBlockContainer class="time-block-container">
+    @for(block of blocks(); track block.id) {
+      <div
+        class="time-block"
+        cdkDrag
+        cdkDragBoundary=".timeline-container"
+        cdkDragLockAxis="y"
+        [cdkDragConstrainPosition]="contrainPosition(pixelsPerMinute)"
+        (cdkDragEnded)="onDragEnd($event, block)"
+        [style.top.px]="block.start * pixelsPerMinute"
+        [style.height.px]="block.duration * pixelsPerMinute"
+        [style.width]="getOverlapWidth(block.id)"
+        [style.left]="getOverlapPadding(block.id)"
+      >
+        <div class="time-block-body" cdkDragHandle>
+          <span>{{block.name}}</span>
+        </div>
+        <div
+          #resizeHandle
+          class="resize-handle"
+          (pointerdown)="onResizePointerDown($event, block)"
+        ></div>
+      </div>
+    }
+    
   </div>
 </div>
 
