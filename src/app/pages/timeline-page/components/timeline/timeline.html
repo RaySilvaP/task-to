@@ -1,0 +1,45 @@
+<div 
+  #timelineContainer
+  class="timeline-container"
+  [style.height.px]="24 * 60 * pixelsPerMinute"
+>
+  <div class="hour-marks" [style.gap.px]="60 * pixelsPerMinute - 2">
+    @for(hour of hours; track hour) {
+      <div class="hour-mark">
+        <span class="hour-number">{{hour}}</span>
+        <div class="hour-line"></div>
+      </div>
+    }
+  </div>
+
+  <div #timeBlocksContainer class="time-blocks">
+    @for(block of timeBlocks(); track block.id) {
+      <div class="time-block-wrapper" 
+        cdkDrag
+        cdkDragBoundary=".timeline-container"
+        cdkDragLockAxis="y"
+        [cdkDragConstrainPosition]="contrainBlockPosition(pixelsPerMinute)"
+        (cdkDragEnded)="onDragBlockEnded($event, block)"
+        [style.top.px]="block.start * pixelsPerMinute"
+        [style.height.px]="block.duration * pixelsPerMinute"
+        [style.width]="getBlockOverlapWidth(block.id)"
+        [style.left]="getBlockOverlapPadding(block.id)"
+      >
+          <app-time-block-component 
+            class="time-block"
+            [timeBlock]="block" 
+            cdkDragHandle
+           />
+
+          <div
+            #resizeHandle
+            class="time-block-resize-handle"
+            (pointerdown)="onResizeBlockPointerDown($event, block)"
+            (pointermove)="onResizeBlockPointerMove($event, block)"
+            (pointerup)="onResizeBlockPointerUp(block)"
+            (pointercancel)="onResizeBlockPointerUp(block)"
+          ></div>
+      </div>
+    }      
+  </div>
+</div>

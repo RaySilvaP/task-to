@@ -3,4 +3,5 @@ export default interface TimeBlock {
   name: string;
   start: number;
   duration: number;
+  overlapOrder: number;
 }

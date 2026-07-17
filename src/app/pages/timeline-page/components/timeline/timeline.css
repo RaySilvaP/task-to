@@ -1,10 +1,9 @@
 .timeline-container {
   position: relative;
-  touch-action: pan-y;
 }
 
-.timeline-wrapper {
-  display: flex;
+.hour-marks {
+  display: flex; 
   flex-direction: column;
   position: absolute;
   height: 100%;
@@ -38,7 +37,14 @@
   opacity: 0;
 }
 
-.time-block {
+.time-blocks {
+  position: absolute;
+  left: 1.5rem;
+  height: 100%;
+  width: calc(100% - 1.5rem);
+}
+
+.time-block-wrapper {
   position: absolute;
   background-color: wheat;
   width: 100%;
@@ -46,11 +52,11 @@
   z-index: 1;
 }
 
-.time-block.cdk-drag-dragging {
+.time-block-wrapper.cdk-drag-dragging {
   z-index: 1000;
 }
 
-.time-block-body {
+.time-block {
   position: absolute;
   top: 0;
   left: 0;
@@ -58,7 +64,7 @@
   bottom: 10px;
 }
 
-.resize-handle {
+.time-block-resize-handle {
   position: absolute;
   bottom: 0;
   left: 0;
@@ -69,7 +75,7 @@
   touch-action: none;
 }
 
-.resize-handle::after {
+.time-block-resize-handle::after {
   content: '';
   position: absolute;
   bottom: 0;
@@ -78,23 +84,4 @@
   height: 4px;
   background: rgba(0, 0, 0, 0.2);
   border-radius: 2px;
-}
-
-.calendar {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  align-items: center;
-  margin-bottom: var(--sm);
-}
-
-.calendar-day {
-  font-size: 2rem;
-}
-
-.time-block-container {
-  position: absolute;
-  left: 1.5rem;
-  height: 100%;
-  width: calc(100% - 1.5rem);
 }
