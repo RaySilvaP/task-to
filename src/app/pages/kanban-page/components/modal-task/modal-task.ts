@@ -43,7 +43,6 @@ export class ModalTask implements OnInit {
       return;
 
     const { name, due } = this.taskForm.value;
-    console.log(name);
     this.taskForm.reset();
 
     const task = {

@@ -1,0 +1,33 @@
+<app-modal [title]="type() == 'create' ? 'Create Block' : 'Edit Block'" (close)="close.emit()">
+  <form [formGroup]="timeBlockForm">
+    <app-input-field label="Name" type="text" formControlName="name" />
+    <app-input-field label="Date" type="date" formControlName="date" />
+    <app-input-field label="Start" type="time" formControlName="start" />
+    <app-input-field label="End" type="time" formControlName="end" />
+    <div class="selected-task-field">
+      <app-button (click)="showTaskModal.set(true)" variant="secondary">Select Task</app-button>
+      <span>{{selectedTask?.name}}</span>
+    </div>
+  </form>
+
+  <app-modal-footer modal-footer>
+    @if(type() === 'edit') {
+      <app-button (click)="onDelete()" variant="danger">Delete</app-button>
+    }
+
+    <app-button [disabled]="timeBlockForm.invalid" (click)="onSubmitForm()" variant="primary">Confirm</app-button>
+  </app-modal-footer>
+</app-modal>
+
+@if(showTaskModal()) {
+  <app-modal title="Tasks" (close)="showTaskModal.set(false)">
+    <ul class="task-list">
+      @for(task of tasks(); track task.id) {
+        <li class="task-item" (click)="onSelectTask(task)">
+          <app-task-card [task]="task"></app-task-card>
+        </li>
+      }
+    </ul>
+    <input #searchTaskInput class="task-search-bar" type="text" name="search-task" placeholder="filter tasks">
+  </app-modal>
+}

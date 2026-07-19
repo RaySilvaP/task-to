@@ -18,6 +18,20 @@ impl<'a> TaskService<'a> {
         TaskService { task_repository }
     }
 
+    pub async fn get_all(&self, name_filter: Option<String>) -> Vec<TaskResponse> {
+        println!("Getting tasks filtered by name: {name_filter:?}...");
+
+        let tasks = self
+            .task_repository
+            .get_all(name_filter)
+            .await
+            .unwrap();
+
+        println!("Tasks retrieved successfully.");
+
+        tasks.into_iter().map(task::model_to_response).collect()
+    }
+
     pub async fn get(&self, kanban_column_id: i32) -> Vec<TaskResponse> {
         println!("Getting tasks for kanban column: {kanban_column_id}...");
 
@@ -35,9 +49,14 @@ impl<'a> TaskService<'a> {
     pub async fn add(&self, request: TaskRequest) {
         println!("Adding new task...");
 
+        let now = chrono::Utc::now().to_rfc3339();
+        let mut active_model = task::request_to_active_model(request);
+        active_model.created_at = ActiveValue::Set(now.clone());
+        active_model.updated_at = ActiveValue::Set(now);
+
         let task = self
             .task_repository
-            .add(task::request_to_active_model(request))
+            .add(active_model)
             .await
             .unwrap();
 
@@ -62,6 +81,7 @@ impl<'a> TaskService<'a> {
             active_model.position = ActiveValue::Set(request.position);
             active_model.kanban_column_id = ActiveValue::Set(request.kanban_column_id);
             active_model.due = ActiveValue::Set(request.due);
+            active_model.updated_at = ActiveValue::Set(chrono::Utc::now().to_rfc3339());
 
             self.task_repository.update(active_model).await.unwrap();
 

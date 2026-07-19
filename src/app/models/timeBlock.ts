@@ -1,7 +1,8 @@
 export default interface TimeBlock {
   id: number;
   name: string;
-  start: number;
+  start_date_time: string;
   duration: number;
-  overlapOrder: number;
+  task_id?: number;
+  overlap_order: number;
 }

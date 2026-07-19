@@ -3,6 +3,11 @@
   class="timeline-container"
   [style.height.px]="24 * 60 * pixelsPerMinute"
 >
+  <div 
+    class="current-hour-bar"
+    [style.top.px]="dateTime().getHours() * 60 + dateTime().getMinutes() * pixelsPerMinute"
+  ></div>
+
   <div class="hour-marks" [style.gap.px]="60 * pixelsPerMinute - 2">
     @for(hour of hours; track hour) {
       <div class="hour-mark">
@@ -15,12 +20,14 @@
   <div #timeBlocksContainer class="time-blocks">
     @for(block of timeBlocks(); track block.id) {
       <div class="time-block-wrapper" 
+        (click)="onBlockClick(block)"
         cdkDrag
         cdkDragBoundary=".timeline-container"
         cdkDragLockAxis="y"
+        (cdkDragStarted)="isDragging = true"
         [cdkDragConstrainPosition]="contrainBlockPosition(pixelsPerMinute)"
         (cdkDragEnded)="onDragBlockEnded($event, block)"
-        [style.top.px]="block.start * pixelsPerMinute"
+        [style.top.px]="getStartMinutes(block) * pixelsPerMinute"
         [style.height.px]="block.duration * pixelsPerMinute"
         [style.width]="getBlockOverlapWidth(block.id)"
         [style.left]="getBlockOverlapPadding(block.id)"
@@ -43,3 +50,7 @@
     }      
   </div>
 </div>
+
+@if(showTimeBlockModal() !== null) {
+  <app-modal-time-block [timeBlock]="showTimeBlockModal()!" (submit)="onEditTimeBlock($event)" (close)="showTimeBlockModal.set(null)"/>
+}

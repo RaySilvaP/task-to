@@ -1,0 +1,43 @@
+form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sm);
+}
+
+.selected-task-field {
+  display: flex;
+  gap: var(--sm);
+  align-items: center;
+
+  span {
+    flex: 1;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+}
+
+.task-list {
+  overflow-y: auto;
+  margin-bottom: var(--sm);
+}
+
+.task-item {
+  background-color: wheat;
+  margin-bottom: var(--sm);
+  cursor: pointer;
+}
+
+.task-item:hover {
+  filter: brightness(0.95);
+}
+
+.task-item:last-of-type {
+  margin-bottom: 0;
+}
+
+.task-search-bar {
+  display: inline-block;
+  width: 100%;
+  font-size: var(--md);
+}

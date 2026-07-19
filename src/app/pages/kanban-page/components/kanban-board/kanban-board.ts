@@ -1,5 +1,4 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
-import { KanbanTaskCard } from '../kanban-task-card/kanban-task-card';
 import { ModalTask } from "../modal-task/modal-task";
 import { CdkDrag, CdkDragDrop, CdkDragHandle, CdkDropList, CdkDropListGroup, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { KanbanColumnService } from '../../../../services/kanban-column-service';
@@ -8,11 +7,11 @@ import { ModalKanbanColumn } from "../modal-kanban-column/modal-kanban-column";
 import KanbanColumn from '../../../../models/kanban-column';
 import Task from '../../../../models/task';
 import { TaskService } from '../../../../services/task-service';
-import { Position } from '@tauri-apps/api/dpi';
+import { TaskCard } from '../../../../shared/components/task-card/task-card';
 
 @Component({
   selector: 'app-kanban-board',
-  imports: [KanbanTaskCard, ModalTask, CdkDrag, CdkDropList, CdkDragHandle, CdkDropListGroup, ModalKanbanColumn],
+  imports: [ModalTask, CdkDrag, CdkDropList, CdkDragHandle, CdkDropListGroup, ModalKanbanColumn, TaskCard],
   templateUrl: './kanban-board.html',
   styleUrl: './kanban-board.css'
 })

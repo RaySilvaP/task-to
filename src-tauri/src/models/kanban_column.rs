@@ -11,6 +11,10 @@ pub struct Model {
     pub position: i32,
 
     pub context_id: i32,
+
+    pub updated_at: String,
+
+    pub created_at: String,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]

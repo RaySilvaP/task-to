@@ -23,7 +23,7 @@ export class InputField implements ControlValueAccessor {
 
   public label = input<string>('');
   public placeholder = input<string>('');
-  public type = input<'text' | 'date'>('text');
+  public type = input<'text' | 'date' | 'time' | 'number'>('text');
   public change = output<string>();
 
   public writeValue(value: string | null): void {

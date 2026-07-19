@@ -42,9 +42,14 @@ impl<'a> KanbanColumnService<'a> {
     pub async fn add(&self, request: KanbanColumnRequest) {
         println!("Adding new kanban column...");
 
+        let now = chrono::Utc::now().to_rfc3339();
+        let mut active_model = kanban_column::request_to_active_model(request);
+        active_model.created_at = ActiveValue::Set(now.clone());
+        active_model.updated_at = ActiveValue::Set(now);
+
         let column = self
             .kanban_column_repository
-            .add(kanban_column::request_to_active_model(request))
+            .add(active_model)
             .await
             .unwrap();
 
@@ -66,6 +71,7 @@ impl<'a> KanbanColumnService<'a> {
 
             active_model.name = ActiveValue::Set(request.name);
             active_model.position = ActiveValue::Set(request.position);
+            active_model.updated_at = ActiveValue::Set(chrono::Utc::now().to_rfc3339());
 
             self.kanban_column_repository
                 .update(active_model)

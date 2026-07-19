@@ -37,10 +37,15 @@ pub fn run() {
             commands::context::add_context,
             commands::context::edit_context,
             commands::context::delete_context,
+            commands::task::get_tasks,
             commands::task::add_task,
             commands::task::edit_task,
             commands::task::order_tasks,
-            commands::task::delete_task
+            commands::task::delete_task,
+            commands::time_block::get_time_blocks_by_day,
+            commands::time_block::add_time_block,
+            commands::time_block::edit_time_block,
+            commands::time_block::delete_time_block
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

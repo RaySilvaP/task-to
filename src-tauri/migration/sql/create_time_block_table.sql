@@ -1,0 +1,22 @@
+ALTER TABLE context ADD COLUMN updated_at TEXT NOT NULL DEFAULT ('2026-07-18');
+ALTER TABLE context ADD COLUMN created_at TEXT NOT NULL DEFAULT ('2026-07-18');
+
+ALTER TABLE task ADD COLUMN updated_at TEXT NOT NULL DEFAULT ('2026-07-18');
+ALTER TABLE task ADD COLUMN created_at TEXT NOT NULL DEFAULT ('2026-07-18');
+
+ALTER TABLE kanban_column ADD COLUMN updated_at TEXT NOT NULL DEFAULT ('2026-07-18');
+ALTER TABLE kanban_column ADD COLUMN created_at TEXT NOT NULL DEFAULT ('2026-07-18');
+
+
+CREATE TABLE IF NOT EXISTS time_block (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    start_date_time TEXT NOT NULL,
+    duration INTEGER NOT NULL,
+    task_id INTEGER,
+    overlap_order INTEGER NOT NULL,
+    updated_at TEXT NOT NULL,
+    created_at TEXT NOT NULL,
+
+    CONSTRAINT fk_task FOREIGN KEY (task_id) REFERENCES task(id) ON DELETE SET NULL
+);

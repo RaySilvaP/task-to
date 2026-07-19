@@ -8,6 +8,7 @@
     @if(type() === 'edit') {
     <app-button (click)="onDelete()" variant="danger">Delete</app-button>
     }
+
     <app-button [disabled]="taskForm.invalid" (click)="onSubmitForm()" variant="primary">Confirm</app-button>
   </app-modal-footer>
 </app-modal>

@@ -1,30 +1,36 @@
-import { AfterViewInit, Component, ElementRef, OnInit, signal, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, effect, ElementRef, inject, input, OnInit, signal, ViewChild } from '@angular/core';
 import TimeBlock from '../../../../models/timeBlock';
 import { TimeBlockComponent } from "../time-block-component/time-block-component";
 import { CdkDrag, CdkDragEnd, CdkDragHandle, DragRef, Point } from '@angular/cdk/drag-drop';
+import { ModalTimeBlock } from "../modal-time-block/modal-time-block";
+import { TimeBlockService } from '../../../../services/time-block-service';
 
 @Component({
   selector: 'app-timeline',
-  imports: [TimeBlockComponent, CdkDrag, CdkDragHandle],
+  imports: [TimeBlockComponent, CdkDrag, CdkDragHandle, ModalTimeBlock],
   templateUrl: './timeline.html',
   styleUrl: './timeline.css',
 })
 export class Timeline implements AfterViewInit {
+  private readonly timeBlockService = inject(TimeBlockService);
   protected hours = Array.from({ length: 25 }, (_, i) => i);
   protected pixelsPerMinute = 0.75;
   @ViewChild('timelineContainer') timelineContainer!: ElementRef<HTMLDivElement>;
   @ViewChild('timeBlocksContainer') timeBlocksContainer!: ElementRef<HTMLDivElement>;
+  protected showTimeBlockModal = signal<TimeBlock | null>(null);
+  protected isDragging = false;
 
-  protected timeBlocks = signal<TimeBlock[]>([
-    { id: 0, name: 'Fazer alguma coisa', start: 900, duration: 60, overlapOrder: 1 },
-    { id: 1, name: 'Fazer outra coisa', start: 300, duration: 60, overlapOrder: 1 },
-    { id: 2, name: 'Fazer mais coisa', start: 500, duration: 60, overlapOrder: 1 },
-    { id: 3, name: 'Fazer nenhuma coisa', start: 600, duration: 60, overlapOrder: 1 },
-    { id: 4, name: 'Fazer qualquer coisa', start: 600, duration: 60, overlapOrder: 2 },
-    { id: 5, name: 'Fazer muita coisa', start: 600, duration: 60, overlapOrder: 3 },
-  ]);
+  protected timeBlocks = signal<TimeBlock[]>([]);
+
   protected resizeBlockData?: { startY: number, startDuration: number };
   protected blocksOverlapData = signal<Map<number, { width: number, padding: number, blocksOverlapping: TimeBlock[] }>>(new Map());
+  public dateTime = input.required<Date>();
+
+  constructor() {
+    effect(async () => {
+      await this.loadTimeBlocks();
+    });
+  }
 
   ngAfterViewInit(): void {
     this.blocksOverlapData.set(new Map(
@@ -33,8 +39,41 @@ export class Timeline implements AfterViewInit {
         return [b.id, this.calculateBlockOverlap(b, blocksOverlapping)]
       })
     ))
-    this.timeBlocks().forEach(b => {
-    })
+  }
+
+  protected get date(): string {
+    const d = this.dateTime();
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+
+  protected async onEditTimeBlock(block: TimeBlock) {
+    await this.timeBlockService.edit(block.id, block);
+    this.showTimeBlockModal.set(null);
+    await this.loadTimeBlocks();
+  }
+
+  protected onBlockClick(block: TimeBlock) {
+    if (this.isDragging) {
+      this.isDragging = false;
+      return;
+    }
+
+    this.showTimeBlockModal.set(block);
+  }
+
+  protected getStartMinutes(block: TimeBlock): number {
+    const date = new Date(block.start_date_time);
+    const minutes = date.getHours() * 60 + date.getMinutes();
+    return minutes;
+  }
+
+  protected setStartMinutes(block: TimeBlock, minutes: number): void {
+    const date = new Date(block.start_date_time);
+    date.setHours(Math.floor(minutes / 60), minutes % 60, 0, 0);
+    block.start_date_time = date.toISOString();
   }
 
   protected contrainBlockPosition(pixelsPerMinute: number) {
@@ -59,9 +98,10 @@ export class Timeline implements AfterViewInit {
     const grid = 15 * this.pixelsPerMinute;
 
     const newStart = Math.round((blockElement.top - containerRect.top) / grid) * 15;
-    block.start = newStart;
 
+    this.setStartMinutes(block, newStart);
     this.checkBlockOverlap(block);
+
     event.source.reset();
   }
 
@@ -75,6 +115,8 @@ export class Timeline implements AfterViewInit {
       startY: event.clientY,
       startDuration: block.duration,
     };
+
+    this.isDragging = true;
   }
 
   protected onResizeBlockPointerMove(event: PointerEvent, block: TimeBlock) {
@@ -106,39 +148,37 @@ export class Timeline implements AfterViewInit {
   private checkBlockOverlap(block: TimeBlock) {
     const blocksOverlapData = this.blocksOverlapData();
     const blocksOverlapping = this.getBlocksOverlapping(block);
-    console.log(blocksOverlapData)
 
     this.propagateBlockOverlapCheck(block);
 
     if (blocksOverlapping.size > 1) {
       const maxOrder = Math.max(
-        ...Array.from(blocksOverlapping).map(b => b.overlapOrder)
+        ...Array.from(blocksOverlapping).map(b => b.overlap_order)
       );
 
-      block.overlapOrder = maxOrder + 1;
+      block.overlap_order = maxOrder + 1;
 
 
       Array.from(blocksOverlapping)
         .sort((b1, b2) => {
-          const sortStart = b1.start - b2.start;
-          const sortOrder = b1.overlapOrder - b2.overlapOrder;
+          const sortStart = this.getStartMinutes(b1) - this.getStartMinutes(b2);
+          const sortOrder = b1.overlap_order - b2.overlap_order;
           return sortStart !== 0 ? sortStart : sortOrder;
         })
         .forEach((blockOverlapping, i) => {
-          blockOverlapping.overlapOrder = i + 1;
+          blockOverlapping.overlap_order = i + 1;
           blocksOverlapData.set(blockOverlapping.id, this.calculateBlockOverlap(blockOverlapping, blocksOverlapping))
         })
     }
     else {
       blocksOverlapData.set(block.id, this.calculateBlockOverlap(block, blocksOverlapping));
-      block.overlapOrder = 1;
+      block.overlap_order = 1;
     }
 
     this.blocksOverlapData.set(blocksOverlapData);
   }
 
   private propagateBlockOverlapCheck(block: TimeBlock) {
-    console.log(block);
     const blocksOverlapData = this.blocksOverlapData();
     const blockOverlapData = blocksOverlapData.get(block.id);
 
@@ -154,8 +194,7 @@ export class Timeline implements AfterViewInit {
 
       const blocksOverlappingSorted = blockOverlapData.blocksOverlapping
         .sort((b1, b2) => {
-          const sortStart = b1.start - b2.start;
-          const sortOrder = b1.overlapOrder - b2.overlapOrder;
+          const sortStart = this.getStartMinutes(b1) - this.getStartMinutes(b2); const sortOrder = b1.overlap_order - b2.overlap_order;
           return sortStart !== 0 ? sortStart : sortOrder;
         });
 
@@ -173,7 +212,7 @@ export class Timeline implements AfterViewInit {
 
       return {
         width: blockWidthPx,
-        padding: (blockWidthPx + gapPx) * (block.overlapOrder - 1),
+        padding: (blockWidthPx + gapPx) * (block.overlap_order - 1),
         blocksOverlapping: Array.from(blocksOverlapping).filter(b => b.id != block.id)
       };
     }
@@ -189,7 +228,8 @@ export class Timeline implements AfterViewInit {
   private getBlocksOverlapping(block: TimeBlock) {
     const blocks = this.timeBlocks();
     const blocksOverlapping = new Set(blocks
-      .filter(b => b.start < block.start + block.duration && block.start < b.start + b.duration));
+      .filter(b => this.getStartMinutes(b) < this.getStartMinutes(block) + block.duration
+        && this.getStartMinutes(block) < this.getStartMinutes(b) + b.duration));
 
     let prevSize = 0;
     while (blocksOverlapping.size > prevSize) {
@@ -197,7 +237,8 @@ export class Timeline implements AfterViewInit {
       for (const b of blocks) {
         if (blocksOverlapping.has(b)) continue;
         for (const ob of blocksOverlapping) {
-          if (b.start < ob.start + ob.duration && ob.start < b.start + b.duration) {
+          if (this.getStartMinutes(b) < this.getStartMinutes(ob) + ob.duration
+            && this.getStartMinutes(ob) < this.getStartMinutes(b) + b.duration) {
             blocksOverlapping.add(b);
             break;
           }
@@ -206,5 +247,10 @@ export class Timeline implements AfterViewInit {
     }
 
     return blocksOverlapping;
+  }
+
+  private async loadTimeBlocks() {
+    const timeBlocks = await this.timeBlockService.getByDay(this.date);
+    this.timeBlocks.set(timeBlocks);
   }
 }

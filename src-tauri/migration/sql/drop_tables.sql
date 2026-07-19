@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS time_block;
 DROP TABLE IF EXISTS task;
 DROP TABLE IF EXISTS kanban_column;
 DROP TABLE IF EXISTS context;

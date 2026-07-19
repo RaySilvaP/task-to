@@ -11,6 +11,16 @@ impl<'a> TaskRepository<'a> {
         TaskRepository { db }
     }
 
+    pub async fn get_all(&self, name_filter: Option<String>) -> Result<Vec<task::Model>, DbErr> {
+        let mut query = task::Entity::find();
+
+        if let Some(name) = name_filter {
+            query = query.filter(task::Column::Name.contains(&name));
+        }
+
+        query.all(self.db.connection()).await
+    }
+
     pub async fn get(&self, kanban_column_id: i32) -> Result<Vec<task::Model>, DbErr> {
         task::Entity::find()
             .filter(task::Column::KanbanColumnId.eq(kanban_column_id))

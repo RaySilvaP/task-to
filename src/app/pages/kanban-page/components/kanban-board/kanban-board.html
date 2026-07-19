@@ -11,7 +11,7 @@
         <ul class="task-list" cdkDropList [cdkDropListData]="kanbanColumn.tasks" (cdkDropListDropped)="dropTask($event, kanbanColumn.id)">
           @for(task of kanbanColumn.tasks; track task.id) {
             <li class="task-item" cdkDrag>
-              <app-kanban-task-card [task]="task" (click)="modalTaskOpen.set(task)" />
+              <app-task-card [task]="task" (click)="modalTaskOpen.set(task)" />
             </li>
           }
         </ul>

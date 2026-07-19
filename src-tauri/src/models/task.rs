@@ -13,6 +13,10 @@ pub struct Model {
     pub kanban_column_id: i32,
 
     pub due: Option<String>,
+
+    pub updated_at: String,
+
+    pub created_at: String,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]

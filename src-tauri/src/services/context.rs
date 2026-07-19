@@ -32,9 +32,14 @@ impl<'a> ContextService<'a> {
     pub async fn add(&self, request: ContextRequest) {
         println!("Adding new context...");
 
+        let now = chrono::Utc::now().to_rfc3339();
+        let mut active_model = context::request_to_active_model(request);
+        active_model.created_at = ActiveValue::Set(now.clone());
+        active_model.updated_at = ActiveValue::Set(now);
+
         let context = self
             .context_repository
-            .add(context::request_to_active_model(request))
+            .add(active_model)
             .await
             .unwrap();
 
@@ -50,6 +55,7 @@ impl<'a> ContextService<'a> {
             let mut active_model: models::context::ActiveModel = column.into();
 
             active_model.name = ActiveValue::Set(request.name);
+            active_model.updated_at = ActiveValue::Set(chrono::Utc::now().to_rfc3339());
 
             self.context_repository.update(active_model).await.unwrap();
 

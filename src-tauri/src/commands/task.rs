@@ -8,10 +8,10 @@ use crate::{
 
 #[tauri::command]
 pub async fn get_tasks(
-    kanban_column_id: i32,
+    name_filter: Option<String>,
     state: State<'_, AppState>,
 ) -> Result<Vec<TaskResponse>, ()> {
-    let tasks = state.task_service().get(kanban_column_id).await;
+    let tasks = state.task_service().get_all(name_filter).await;
     Ok(tasks)
 }
 
