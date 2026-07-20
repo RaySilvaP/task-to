@@ -1,11 +1,23 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { invoke } from '@tauri-apps/api/core';
 import TimeBlock from '../models/timeBlock';
 
 @Injectable()
 export class TimeBlockService {
-  public async getByDay(date: string) {
-    return await invoke<TimeBlock[]>('get_time_blocks_by_day', { date });
+  private readonly today = new Date(Date.now());
+  private lastDay = new Date(this.today.getTime() - this.today.getTimezoneOffset() * 60 * 1000).toISOString().slice(0, 10);
+  private readonly _timeBlocks = signal<TimeBlock[]>([]);
+  public readonly timeBlocks = this._timeBlocks.asReadonly();
+
+  public async loadByDay(date: string) {
+    this.lastDay = date;
+    const timeBlocks = await invoke<TimeBlock[]>('get_time_blocks_by_day', { date });
+    this._timeBlocks.set(timeBlocks);
+  }
+
+  public async loadByLastDay() {
+    const timeBlocks = await invoke<TimeBlock[]>('get_time_blocks_by_day', { date: this.lastDay });
+    this._timeBlocks.set(timeBlocks);
   }
 
   public async add(timeBlock: TimeBlock) {

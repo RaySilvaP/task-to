@@ -1,9 +1,10 @@
 import { DatePipe } from '@angular/common';
-import { Component, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { Timeline } from "./components/timeline/timeline";
 import { ModalTimeBlock } from "./components/modal-time-block/modal-time-block";
 import { TaskService } from '../../services/task-service';
 import { TimeBlockService } from '../../services/time-block-service';
+import TimeBlock from '../../models/timeBlock';
 
 @Component({
   selector: 'app-timeline-page',
@@ -13,6 +14,7 @@ import { TimeBlockService } from '../../services/time-block-service';
   providers: [TaskService, TimeBlockService]
 })
 export class TimelinePage {
+  private readonly timeBlockService = inject(TimeBlockService);
   private swipeData = { startX: 0, startY: 0 };
   private isDraggingBlock = false;
   protected today = signal<Date>(new Date(Date.now()));
@@ -60,5 +62,11 @@ export class TimelinePage {
     const date = new Date(this.today());
     date.setDate(date.getDate() + movement)
     this.today.set(date);
+  }
+
+  protected onCreateTimeBlock(block: TimeBlock) {
+    this.timeBlockService.add(block);
+    this.timeBlockService.loadByLastDay();
+    this.showBlockModal.set(false);
   }
 }

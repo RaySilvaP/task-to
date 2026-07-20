@@ -16,5 +16,5 @@
 <button class="action-btn" type="button" (click)="showBlockModal.set(true)">+</button>
 
 @if(showBlockModal()) {
-  <app-modal-time-block type="edit" (close)="showBlockModal.set(false)"/>
+  <app-modal-time-block (close)="showBlockModal.set(false)" (submit)="onCreateTimeBlock($event)"/>
 }

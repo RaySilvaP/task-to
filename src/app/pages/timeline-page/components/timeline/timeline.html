@@ -3,10 +3,12 @@
   class="timeline-container"
   [style.height.px]="24 * 60 * pixelsPerMinute"
 >
-  <div 
-    class="current-hour-bar"
-    [style.top.px]="dateTime().getHours() * 60 + dateTime().getMinutes() * pixelsPerMinute"
-  ></div>
+  @if(today.getDay() === dateTime().getDay()) {
+    <div 
+      class="current-hour-bar"
+      [style.top.px]="(dateTime().getHours() * 60 + dateTime().getMinutes()) * pixelsPerMinute"
+    ></div>
+  }
 
   <div class="hour-marks" [style.gap.px]="60 * pixelsPerMinute - 2">
     @for(hour of hours; track hour) {
@@ -52,5 +54,11 @@
 </div>
 
 @if(showTimeBlockModal() !== null) {
-  <app-modal-time-block [timeBlock]="showTimeBlockModal()!" (submit)="onEditTimeBlock($event)" (close)="showTimeBlockModal.set(null)"/>
+  <app-modal-time-block 
+    type="edit" 
+    [timeBlock]="showTimeBlockModal()!" 
+    (submit)="onEditTimeBlock($event)" 
+    (delete)="onDeleteBlock($event)"
+    (close)="showTimeBlockModal.set(null)"
+  />
 }
