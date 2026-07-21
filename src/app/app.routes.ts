@@ -1,6 +1,7 @@
 import { Routes } from "@angular/router";
 import { KanbanPage } from "./pages/kanban-page/kanban-page";
 import { TimelinePage } from "./pages/timeline-page/timeline-page";
+import { PomodoroPage } from "./pages/pomodoro-page/pomodoro-page";
 
 export const routes: Routes = [
   {
@@ -12,6 +13,11 @@ export const routes: Routes = [
     path: 'timeline',
     component: TimelinePage,
     title: 'Timeline'
+  },
+  {
+    path: 'pomodoro',
+    component: PomodoroPage,
+    title: 'Pomodoro'
   },
   {
     path: '**',

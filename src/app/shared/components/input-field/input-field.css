@@ -1,8 +1,48 @@
 :host {
   display: flex;
   flex-direction: column;
+  gap: 0.25rem;
+}
+
+label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text, #111827);
 }
 
 input {
+  padding: var(--xsm) var(--md);
   font-size: var(--md);
+  font-family: inherit;
+  width: 100%;
+  box-sizing: border-box;
+
+  border: 1px solid var(--border, #e5e7eb);
+  border-radius: 8px;
+  background: white;
+  color: var(--text, #111827);
+
+  outline: none;
+  transition:
+    border-color 150ms ease,
+    box-shadow 150ms ease;
+}
+
+input::placeholder {
+  color: #9ca3af;
+}
+
+input:focus {
+  border-color: var(--accent-color);
+  outline: 2px solid color-mix(in srgb, var(--accent-color) 25%, transparent);
+  outline-offset: -1px;
+}
+
+input:hover:not(:disabled):not(:focus) {
+  border-color: #d1d5db;
+}
+
+input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }

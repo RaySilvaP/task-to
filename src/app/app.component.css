@@ -15,10 +15,10 @@
 }
 
 .container {
-  padding: var(--xsm);
   padding-top: 5vh;
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  max-height: 100vh;
   box-sizing: border-box;
 }

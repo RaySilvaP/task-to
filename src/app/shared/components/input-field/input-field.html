@@ -2,5 +2,5 @@
 <label> {{label()}} </label>
 }
 
-<input [type]="type()" [placeholder]="placeholder()" [value]="value" [disabled]="disabled" (input)="onInput($event)"
+<input [type]="type()" [placeholder]="placeholder()" [value]="value" [disabled]="_combinedDisabled" (input)="onInput($event)"
   (blur)="onBlur()">

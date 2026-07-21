@@ -1,0 +1,94 @@
+:host {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+}
+
+.pomodoro {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  gap: var(--xlg);
+}
+
+.clock-wrapper {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.clock {
+  position: relative;
+  width: 340px;
+  height: 340px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.clock-phase {
+  position: absolute;
+  top: 4rem;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  color: var(--text-muted, #9ca3af);
+  z-index: 1;
+}
+
+.clock-ring {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.clock-ring-bg {
+  fill: none;
+  stroke: var(--border, #e5e7eb);
+  stroke-width: 6;
+}
+
+.clock-ring-progress {
+  fill: none;
+  stroke: var(--accent-color, #3b82f6);
+  stroke-width: 6;
+  stroke-dasharray: 565.48;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.3s ease;
+}
+
+.clock-time {
+  font-size: 4.5rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--text, #111827);
+  z-index: 1;
+}
+
+.clock-start-btn {
+  font-size: 2rem;
+  font-weight: 600;
+  padding: 1rem 2rem;
+  z-index: 1;
+}
+
+.controls {
+  display: flex;
+  gap: var(--md, 0.75rem);
+}
+
+.settings {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--md, 0.75rem);
+  max-width: 360px;
+}
+
+.settings > app-input-field {
+  flex: 1 1 140px;
+}

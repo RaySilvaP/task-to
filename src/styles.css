@@ -1,6 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
 :root {
-  --accent-color: red;
+  --accent-color: #083d77;
+  --background-color: #EFEFEF;
   --xsm: 0.5rem;
   --sm: 0.875rem;
   --md: 1rem;
@@ -10,10 +11,15 @@
 
 body {
   margin: 0;
+  background-color: var(--background-color);
 }
 
 ul {
   list-style: none;
   padding: var(--xsm);
   margin: 0;
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
 }

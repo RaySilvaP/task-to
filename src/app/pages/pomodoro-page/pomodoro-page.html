@@ -1,0 +1,62 @@
+<div class="pomodoro">
+  <div class="clock-wrapper">
+    <div class="clock">
+      <span class="clock-phase">{{ phaseLabel() }}</span>
+      <svg class="clock-ring" viewBox="0 0 200 200">
+        <circle class="clock-ring-bg" cx="100" cy="100" r="90" />
+        <circle
+          class="clock-ring-progress"
+          cx="100" cy="100" r="90"
+          [style.stroke-dashoffset]="565.48 - (progress() * 565.48 / 100)"
+        />
+      </svg>
+      @if (showTopButton()) {
+        <app-button class="clock-start-btn" variant="primary" (click)="startNext()">{{ nextLabel() }}</app-button>
+      } @else {
+        <span class="clock-time">{{ displayTime() }}</span>
+      }
+    </div>
+  </div>
+
+  @if (showControls()) {
+    <div class="controls">
+      @if (isRunning()) {
+        <app-button variant="primary" (click)="togglePause()">Pause</app-button>
+      } @else {
+        <app-button variant="primary" (click)="togglePause()">Resume</app-button>
+      }
+      <app-button variant="secondary" (click)="reset()">Reset</app-button>
+    </div>
+  }
+
+  <div class="settings">
+    <app-input-field
+      label="Work (min)"
+      type="number"
+      [placeholder]="'25'"
+      [disabled]="settingsDisabled()"
+      (change)="onWorkTimeChange($event)"
+    />
+    <app-input-field
+      label="Rest (min)"
+      type="number"
+      [placeholder]="'5'"
+      [disabled]="settingsDisabled()"
+      (change)="onRestTimeChange($event)"
+    />
+    <app-input-field
+      label="Big Rest (min)"
+      type="number"
+      [placeholder]="'15'"
+      [disabled]="settingsDisabled()"
+      (change)="onBigRestTimeChange($event)"
+    />
+    <app-input-field
+      label="Sessions before big rest"
+      type="number"
+      [placeholder]="'3'"
+      [disabled]="settingsDisabled()"
+      (change)="onWorkSessionsChange($event)"
+    />
+  </div>
+</div>

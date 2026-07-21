@@ -19,11 +19,12 @@ export class InputField implements ControlValueAccessor {
   private onTouched = () => { };
 
   protected value = '';
-  protected disabled = false;
+  protected _disabled = false;
 
   public label = input<string>('');
   public placeholder = input<string>('');
   public type = input<'text' | 'date' | 'time' | 'number'>('text');
+  public disabled = input(false);
   public change = output<string>();
 
   public writeValue(value: string | null): void {
@@ -39,7 +40,11 @@ export class InputField implements ControlValueAccessor {
   }
 
   public setDisabledState?(disabled: boolean): void {
-    this.disabled = disabled;
+    this._disabled = disabled;
+  }
+
+  get _combinedDisabled(): boolean {
+    return this._disabled || this.disabled();
   }
 
   protected onInput(event: Event): void {
