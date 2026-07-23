@@ -16,5 +16,5 @@
 <button class="action-btn" type="button" (click)="showBlockModal.set(true)">+</button>
 
 @if(showBlockModal()) {
-  <app-modal-time-block (close)="showBlockModal.set(false)" (submit)="onCreateTimeBlock($event)"/>
+  <app-modal-time-block [timelineDate]="today()" (close)="showBlockModal.set(false)" (submit)="onCreateTimeBlock($event)"/>
 }

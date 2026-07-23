@@ -24,6 +24,7 @@ export class ModalTimeBlock implements OnInit {
   protected selectedTask?: Task;
   public type = input<'edit' | 'create'>('create');
   public timeBlock = input<TimeBlock>();
+  public timelineDate = input<Date>();
   public close = output();
   public submit = output<TimeBlock>();
   public delete = output<number>();
@@ -39,6 +40,7 @@ export class ModalTimeBlock implements OnInit {
 
   async ngOnInit(): Promise<void> {
     const block = this.timeBlock();
+    const timelineDate = this.timelineDate();
     if (block) {
       const startDate = new Date(block.start_date_time);
       const endDate = new Date(startDate.getTime() + block.duration * 60000);
@@ -53,11 +55,19 @@ export class ModalTimeBlock implements OnInit {
         { emitEvent: false }
       );
     }
+    else if (timelineDate) {
+      this.timeBlockForm.patchValue(
+        {
+          date: this.formatDate(timelineDate),
+        },
+        { emitEvent: false }
+      );
+    }
 
     this.tasks.set(await this.taskService.get());
-    if(block?.task_id)
+    if (block?.task_id)
       this.selectedTask = this.tasks().find(t => t.id === block.task_id);
-      
+
   }
 
   private formatDate(date: Date): string {

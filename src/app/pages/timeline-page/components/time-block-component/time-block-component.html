@@ -1,1 +1,8 @@
-<span>{{timeBlock().name}}</span>
+<div class="block-head">
+  <span class="block-name">{{timeBlock().name}}</span>
+  @if(timeBlock().task_id) {
+    <span class="block-task-name">{{timeBlock().name}}</span>
+  }
+</div>
+
+<span class="block-time">{{timeRange()}}</span>

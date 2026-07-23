@@ -52,10 +52,11 @@
 
 .time-block-wrapper {
   position: absolute;
-  background-color: wheat;
+  background-color: #add8e6f5;
   width: 100%;
   touch-action: none;
   z-index: 1;
+  border-radius: 5px;
 }
 
 .time-block-wrapper.cdk-drag-dragging {
@@ -67,7 +68,7 @@
   top: 0;
   left: 0;
   right: 0;
-  bottom: 10px;
+  bottom: 8px;
 }
 
 .time-block-resize-handle {
@@ -75,21 +76,10 @@
   bottom: 0;
   left: 0;
   right: 0;
-  height: 10px;
+  height: 8px;
   cursor: ns-resize;
   background: transparent;
   touch-action: none;
-}
-
-.time-block-resize-handle::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 25%;
-  right: 25%;
-  height: 4px;
-  background: rgba(0, 0, 0, 0.2);
-  border-radius: 2px;
 }
 
 .current-hour-bar {

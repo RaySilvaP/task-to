@@ -14,7 +14,7 @@ import { TimeBlockService } from '../../../../services/time-block-service';
 export class Timeline {
   private readonly timeBlockService = inject(TimeBlockService);
   protected hours = Array.from({ length: 25 }, (_, i) => i);
-  protected pixelsPerMinute = 0.75;
+  protected pixelsPerMinute = 1;
   protected today = new Date(Date.now());
   @ViewChild('timelineContainer') timelineContainer!: ElementRef<HTMLDivElement>;
   @ViewChild('timeBlocksContainer') timeBlocksContainer!: ElementRef<HTMLDivElement>;
