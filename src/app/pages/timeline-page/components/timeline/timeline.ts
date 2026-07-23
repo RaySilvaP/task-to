@@ -51,14 +51,6 @@ export class Timeline {
     })
   }
 
-  protected get date(): string {
-    const d = this.dateTime();
-    const year = d.getFullYear();
-    const month = String(d.getMonth() + 1).padStart(2, '0');
-    const day = String(d.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
-  }
-
   protected async onEditTimeBlock(block: TimeBlock) {
     await this.timeBlockService.edit(block.id, block);
     this.showTimeBlockModal.set(null);
@@ -255,7 +247,7 @@ export class Timeline {
   private getBlocksOverlapping(block: TimeBlock) {
     const blocks = this.timeBlocks();
     const blocksOverlapping = new Set(blocks
-      .filter(b => new Date(b.start_date_time).getDate() === new Date(block.start_date_time).getDate() 
+      .filter(b => new Date(b.start_date_time).getDate() === new Date(block.start_date_time).getDate()
         && this.getStartMinutes(b) < this.getStartMinutes(block) + block.duration
         && this.getStartMinutes(block) < this.getStartMinutes(b) + b.duration));
 
@@ -265,7 +257,7 @@ export class Timeline {
       for (const b of blocks) {
         if (blocksOverlapping.has(b)) continue;
         for (const ob of blocksOverlapping) {
-          if (new Date(b.start_date_time).getDate() === new Date(ob.start_date_time).getDate() 
+          if (new Date(b.start_date_time).getDate() === new Date(ob.start_date_time).getDate()
             && this.getStartMinutes(b) < this.getStartMinutes(ob) + ob.duration
             && this.getStartMinutes(ob) < this.getStartMinutes(b) + b.duration) {
             blocksOverlapping.add(b);
@@ -279,6 +271,7 @@ export class Timeline {
   }
 
   private async loadTimeBlocks() {
-    await this.timeBlockService.loadByDay(this.date);
+    const date = new Date(this.dateTime().getFullYear(), this.dateTime().getMonth(), this.dateTime().getDate());
+    await this.timeBlockService.loadByDay(date.toISOString());
   }
 }

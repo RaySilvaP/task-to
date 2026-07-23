@@ -1,3 +1,4 @@
+use chrono::Utc;
 use sea_orm::{ActiveModelTrait, ColumnTrait, DbErr, EntityTrait, QueryFilter};
 
 use crate::{database::Database, models::time_block};
@@ -11,9 +12,10 @@ impl<'a> TimeBlockRepository<'a> {
         TimeBlockRepository { db }
     }
 
-    pub async fn get_by_day(&self, date: &str) -> Result<Vec<time_block::Model>, DbErr> {
+    pub async fn get_by_day(&self, date: chrono::DateTime<Utc>, end_date: chrono::DateTime<Utc>) -> Result<Vec<time_block::Model>, DbErr> {
         time_block::Entity::find()
-            .filter(time_block::Column::StartDateTime.starts_with(date))
+            .filter(time_block::Column::StartDateTime.gte(date.to_rfc3339()))
+            .filter(time_block::Column::StartDateTime.lt(end_date.to_rfc3339()))
             .all(self.db.connection())
             .await
     }

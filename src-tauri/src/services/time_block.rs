@@ -1,3 +1,4 @@
+use chrono::Utc;
 use sea_orm::ActiveValue;
 
 use crate::{
@@ -13,21 +14,32 @@ pub struct TimeBlockService<'a> {
 
 impl<'a> TimeBlockService<'a> {
     pub fn new(time_block_repository: TimeBlockRepository<'a>) -> Self {
-        TimeBlockService { time_block_repository }
+        TimeBlockService {
+            time_block_repository,
+        }
     }
 
     pub async fn get_by_day(&self, date: &str) -> Vec<TimeBlockResponse> {
         println!("Getting time blocks for date: {date}...");
 
+        let date_utc = chrono::DateTime::parse_from_rfc3339(date).unwrap();
+        let end_date_utc = date_utc + chrono::Duration::days(1);
+
         let blocks = self
             .time_block_repository
-            .get_by_day(date)
+            .get_by_day(
+                date_utc.with_timezone(&Utc),
+                end_date_utc.with_timezone(&Utc),
+            )
             .await
             .unwrap();
 
         println!("Time blocks retrieved successfully.");
 
-        blocks.into_iter().map(time_block::model_to_response).collect()
+        blocks
+            .into_iter()
+            .map(time_block::model_to_response)
+            .collect()
     }
 
     pub async fn add(&self, request: TimeBlockRequest) {
@@ -45,7 +57,12 @@ impl<'a> TimeBlockService<'a> {
 
     pub async fn edit(&self, block_id: i32, request: TimeBlockRequest) {
         println!("Editing time block: {block_id}...");
-        if let Some(block) = self.time_block_repository.get_by_id(block_id).await.unwrap() {
+        if let Some(block) = self
+            .time_block_repository
+            .get_by_id(block_id)
+            .await
+            .unwrap()
+        {
             println!("Time block found, updating...");
             let mut active_model: time_block_model::ActiveModel = block.into();
 
@@ -56,7 +73,10 @@ impl<'a> TimeBlockService<'a> {
             active_model.overlap_order = ActiveValue::Set(request.overlap_order);
             active_model.updated_at = ActiveValue::Set(chrono::Utc::now().to_rfc3339());
 
-            self.time_block_repository.update(active_model).await.unwrap();
+            self.time_block_repository
+                .update(active_model)
+                .await
+                .unwrap();
             println!("Time block edited successfully.");
         } else {
             println!("Time block not found");
