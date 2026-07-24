@@ -7,7 +7,6 @@
   display: flex;
   padding: var(--xsm);
   gap: var(--xsm);
-  background-color: yellow;
   overflow-x: auto;
   flex: 1;
 }
@@ -18,7 +17,8 @@
 }
 
 .kanban-column {
-  background-color: orange;
+  background-color: #ddd;
+  border-radius: 4px;
 }
 
 .column-header {
@@ -27,11 +27,18 @@
   align-items: center;
   font-size: var(--md);
   padding: 0 var(--xsm);
-  background-color: wheat;
 }
 
 .column-name {
   display: inline-block;
+  margin-right: var(--sm);
+}
+
+.column-edit-btn {
+  background-color: transparent;
+  border: 0;
+  cursor: pointer;
+  filter: brightness(0);
 }
 
 .task-list {
@@ -39,8 +46,9 @@
 }
 
 .task-item {
-  background-color: wheat;
+  background-color: white;
   margin-bottom: var(--xsm);
+  border-radius: 4px;
 }
 
 .task-item:last-child {

@@ -36,6 +36,14 @@ form {
   margin-bottom: 0;
 }
 
+.no-tasks-message {
+  text-align: center;
+  display: block;
+  margin-bottom: var(--sm);
+  font-size: var(--md);
+  color: gray;
+}
+
 .task-search-bar {
   display: inline-block;
   width: 100%;

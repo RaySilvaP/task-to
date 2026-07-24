@@ -4,6 +4,8 @@
   <li>tag</li>
 </ul>
 <div class="task-card-bottom">
-  <span>today</span>
-  <span>hard</span>
+  @if(task().due) {
+    <span>{{ (task().due | date:'MMM d') }}</span>
+  }
+  <span>high</span>
 </div>

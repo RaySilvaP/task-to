@@ -40,7 +40,9 @@
   text-align: center;
   font-weight: 500;
   padding: var(--xsm);
-  background: rgba(255, 0, 0, 0.5);
+  color: white;
+  font-size: var(--md);
+  background: var(--accent-color);
   border-radius: var(--xsm);
 }
 

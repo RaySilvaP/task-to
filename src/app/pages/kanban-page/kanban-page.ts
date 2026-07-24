@@ -6,10 +6,11 @@ import { ModalContext } from "./components/modal-context/modal-context";
 import Context from '../../models/context';
 import { KanbanColumnService } from '../../services/kanban-column-service';
 import { TaskService } from '../../services/task-service';
+import { Button } from "../../shared/components/button/button";
 
 @Component({
   selector: 'app-kanban-page',
-  imports: [KanbanBoard, KanbanActionButton, ModalContext],
+  imports: [KanbanBoard, KanbanActionButton, ModalContext, Button],
   templateUrl: './kanban-page.html',
   styleUrl: './kanban-page.css',
   providers: [ContextService, KanbanColumnService, TaskService]

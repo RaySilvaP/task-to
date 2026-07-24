@@ -5,8 +5,16 @@
   flex: 1;
 }
 
-.context-toolbar {
-  background-color: red;
+.context-header {
+  display: flex;
+  gap: var(--sm);
+  align-items: center;
   font-size: var(--md);
   padding: var(--sm);
+  background-color: white;
+  border-bottom: 1px solid lightgray;
+}
+
+.edit-context-btn {
+  font-size: var(--sm);
 }

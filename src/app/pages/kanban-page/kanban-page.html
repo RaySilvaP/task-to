@@ -1,4 +1,4 @@
-<div class="context-toolbar">
+<div class="context-header">
   <select class="context-selector" (change)="onSelectContext($event)">
     <option disabled [selected]="!selectedContext()">Select the context</option>
     @for(context of contexts(); track context.id) {
@@ -6,7 +6,7 @@
     }
   </select>
   @if(selectedContext()) {
-    <button type="button" (click)="isModalOpen.set(true)">Edit Context</button>
+    <app-button class="edit-context-btn" variant="secondary" (click)="isModalOpen.set(true)">Edit Context</app-button>
   }
 </div>
 

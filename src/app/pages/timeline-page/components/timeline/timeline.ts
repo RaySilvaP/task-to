@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, effect, ElementRef, inject, input, signal, ViewChild } from '@angular/core';
 import TimeBlock from '../../../../models/timeBlock';
 import { TimeBlockComponent } from "../time-block-component/time-block-component";
-import { CdkDrag, CdkDragEnd, CdkDragHandle, DragRef, Point } from '@angular/cdk/drag-drop';
+import { CdkDrag, CdkDragEnd, CdkDragHandle, CdkDragMove, DragRef, Point } from '@angular/cdk/drag-drop';
 import { ModalTimeBlock } from "../modal-time-block/modal-time-block";
 import { TimeBlockService } from '../../../../services/time-block-service';
 
@@ -116,9 +116,9 @@ export class Timeline {
     const newStart = Math.round((blockElement.top - containerRect.top) / grid) * 15;
 
     this.setStartMinutes(block, newStart);
-    this.checkBlockOverlap(block);
-
     event.source.reset();
+
+    await this.checkBlockOverlap(block);
   }
 
   protected onResizeBlockPointerDown(event: PointerEvent, block: TimeBlock) {
@@ -161,7 +161,7 @@ export class Timeline {
     return overlapProps ? `${overlapProps.padding}px` : '0';
   }
 
-  private checkBlockOverlap(block: TimeBlock) {
+  private async checkBlockOverlap(block: TimeBlock) {
     const blocksOverlapData = this.blocksOverlapData();
     const blocksOverlapping = this.getBlocksOverlapping(block);
     console.log(blocksOverlapping);
@@ -175,22 +175,24 @@ export class Timeline {
 
       block.overlap_order = maxOrder + 1;
 
-      blocksOverlapping
+      const promises = blocksOverlapping
         .sort((b1, b2) => {
           const sortStart = this.getStartMinutes(b1) - this.getStartMinutes(b2);
           const sortOrder = b1.overlap_order - b2.overlap_order;
           return sortStart !== 0 ? sortStart : sortOrder;
         })
-        .forEach((blockOverlapping, i) => {
+        .map(async (blockOverlapping, i) => {
           blockOverlapping.overlap_order = i + 1;
           blocksOverlapData.set(blockOverlapping.id, this.calculateBlockOverlap(blockOverlapping, blocksOverlapping))
-          this.timeBlockService.edit(blockOverlapping.id, blockOverlapping);
+          await this.timeBlockService.edit(blockOverlapping.id, blockOverlapping);
         })
+
+      await Promise.all(promises);
     }
     else {
       blocksOverlapData.set(block.id, this.calculateBlockOverlap(block, blocksOverlapping));
       block.overlap_order = 1;
-      this.timeBlockService.edit(block.id, block);
+      await this.timeBlockService.edit(block.id, block);
     }
 
     this.blocksOverlapData.set(blocksOverlapData);

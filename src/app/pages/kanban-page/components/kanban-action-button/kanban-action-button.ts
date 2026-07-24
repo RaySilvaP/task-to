@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, ElementRef, HostListener, inject, signal } from '@angular/core';
 import { ModalTask } from "../modal-task/modal-task";
 import { ModalContext } from "../modal-context/modal-context";
 import { ContextService } from '../../../../services/context-service';
@@ -19,9 +19,17 @@ export class KanbanActionButton {
   private contextService = inject(ContextService);
   private kanbanColumnService = inject(KanbanColumnService);
   private taskService = inject(TaskService);
+  private elementRef = inject(ElementRef);
   protected selectedContextId = this.contextService.getSelectedContext();
   protected isOpen = signal<boolean>(false);
   protected isModalOpen = signal<'none' | 'task' | 'context' | 'column'>('none');
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent) {
+    if (!this.elementRef.nativeElement.contains(event.target)) {
+      this.isOpen.set(false);
+    }
+  }
 
   protected async onCreateTask(task: Task) {
     const selectedContextId = this.selectedContextId();

@@ -2,7 +2,7 @@
   <button type="button" class="calendar-btn" (click)="increaseDate(-1)"><img src="assets/arrow_back_ios_24dp_999999_FILL0_wght400_GRAD0_opsz24.svg" alt="Previous day"/></button>
   <div class="calendar-body" (click)="resetDate()">
     <span class="calendar-day">{{ today() | date:'d' }}</span>
-    <span class="calendar-info">{{ today() | date:'EEE' }} {{ today() | date:'MMMM' }}</span>
+    <span class="calendar-info">{{ today() | date:'EEE' }}, {{ today() | date:'MMMM' }}</span>
   </div>
   <button type="button" class="calendar-btn" (click)="increaseDate(1)"><img src="assets/arrow_forward_ios_24dp_999999_FILL0_wght400_GRAD0_opsz24.svg" alt="Next day"/></button>
 </div>

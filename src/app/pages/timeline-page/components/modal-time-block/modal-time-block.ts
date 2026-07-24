@@ -114,4 +114,8 @@ export class ModalTimeBlock implements OnInit {
     this.selectedTask = task;
     this.showTaskModal.set(false);
   }
+
+  protected async onChangeFilter(filter: string) {
+    this.tasks.set(await this.taskService.get(filter));
+  }
 }

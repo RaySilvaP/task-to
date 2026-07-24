@@ -3,9 +3,13 @@
     <li class="column-item" cdkDrag cdkDragLockAxis="x">
       <div class="kanban-column">
         <div class="column-header" cdkDragHandle>
-          <h4 class="column-name">{{kanbanColumn.name}}</h4>
-          <span class="column-task-count">{{kanbanColumn.tasks.length}}</span>
-          <button class="column-options" type="button" (click)="modalKanbanColumnOpen.set(kanbanColumn)">ops</button>
+          <div class="column-info">
+            <h4 class="column-name">{{kanbanColumn.name}}</h4>
+            <span class="column-tasks-count">{{kanbanColumn.tasks.length}}</span>
+          </div>
+          <button class="column-edit-btn" type="button" (click)="modalKanbanColumnOpen.set(kanbanColumn)">
+            <img src="/assets/edit_24dp_999999_FILL0_wght400_GRAD0_opsz24.svg" alt="Edit column list">
+          </button>
         </div>
 
         <ul class="task-list" cdkDropList [cdkDropListData]="kanbanColumn.tasks" (cdkDropListDropped)="dropTask($event, kanbanColumn.id)">

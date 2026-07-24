@@ -21,13 +21,19 @@
 
 @if(showTaskModal()) {
   <app-modal title="Tasks" (close)="showTaskModal.set(false)">
-    <ul class="task-list">
-      @for(task of tasks(); track task.id) {
-        <li class="task-item" (click)="onSelectTask(task)">
-          <app-task-card [task]="task"></app-task-card>
-        </li>
-      }
-    </ul>
-    <input #searchTaskInput class="task-search-bar" type="text" name="search-task" placeholder="filter tasks">
+    @if(tasks().length > 0 ) {
+      <ul class="task-list">
+        @for(task of tasks(); track task.id) {
+          <li class="task-item" (click)="onSelectTask(task)">
+            <app-task-card [task]="task"></app-task-card>
+            </li>
+        }
+      </ul>
+    }
+    @else {
+      <span class="no-tasks-message">No tasks found</span>
+    }
+
+    <app-input-field placeholder="Filter tasks" (change)="onChangeFilter($event)"/>
   </app-modal>
 }

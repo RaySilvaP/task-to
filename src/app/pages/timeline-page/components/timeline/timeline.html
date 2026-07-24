@@ -13,11 +13,13 @@
   <div class="hour-marks" [style.gap.px]="60 * pixelsPerMinute - 2">
     @for(hour of hours; track hour) {
       <div class="hour-mark">
-        <span class="hour-number">{{hour}}</span>
+        <span class="hour-number">{{hour}}:00</span>
         <div class="hour-line"></div>
       </div>
     }
   </div>
+
+  <div class="hour-border"></div>
 
   <div #timeBlocksContainer class="time-blocks">
     @for(block of timeBlocks(); track block.id) {
