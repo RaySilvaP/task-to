@@ -4,7 +4,7 @@ import { ModalFooter } from '../../../../shared/components/modal-footer/modal-fo
 import { Button } from "../../../../shared/components/button/button";
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { InputField } from "../../../../shared/components/input-field/input-field";
-import Task from '../../../../models/task';
+import Task, { TaskPriority } from '../../../../models/task';
 
 @Component({
   selector: 'app-modal-task',
@@ -15,6 +15,9 @@ import Task from '../../../../models/task';
 export class ModalTask implements OnInit {
   private fb = inject(FormBuilder);
   protected taskForm: FormGroup;
+  protected priorityOptions = Object.entries(TaskPriority)
+    .filter(([key]) => isNaN(Number(key)))
+    .map(([key, value]) => ({ key, value: value as TaskPriority }));
   public type = input<'edit' | 'create'>('create');
   public task = input<Task>();
   public close = output();
@@ -24,7 +27,8 @@ export class ModalTask implements OnInit {
   constructor() {
     this.taskForm = this.fb.group({
       name: ['', Validators.required],
-      due: []
+      due: [],
+      priority: []
     });
   }
 
@@ -32,7 +36,8 @@ export class ModalTask implements OnInit {
     this.taskForm.patchValue(
       {
         name: this.task()?.name ?? '',
-        due: this.task()?.due
+        due: this.task()?.due,
+        priority: this.task()?.priority ?? null,
       },
       { emitEvent: false }
     );
@@ -42,13 +47,14 @@ export class ModalTask implements OnInit {
     if (this.taskForm.invalid)
       return;
 
-    const { name, due } = this.taskForm.value;
+    const { name, due, priority } = this.taskForm.value;
     this.taskForm.reset();
 
     const task = {
       id: this.task()?.id ?? -1,
       name,
       due,
+      priority,
       kanban_column_id: this.task()?.kanban_column_id ?? -1,
       position: this.task()?.position ?? 1,
     } as Task;

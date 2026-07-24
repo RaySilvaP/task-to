@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, effect, inject, OnInit, signal } from '@angular/core';
 import { ModalTask } from "../modal-task/modal-task";
 import { CdkDrag, CdkDragDrop, CdkDragHandle, CdkDropList, CdkDropListGroup, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { KanbanColumnService } from '../../../../services/kanban-column-service';
@@ -15,7 +15,7 @@ import { TaskCard } from '../../../../shared/components/task-card/task-card';
   templateUrl: './kanban-board.html',
   styleUrl: './kanban-board.css'
 })
-export class KanbanBoard implements OnInit {
+export class KanbanBoard {
   private kanbanColumnService = inject(KanbanColumnService);
   private contextService = inject(ContextService);
   private taskService = inject(TaskService);
@@ -24,10 +24,11 @@ export class KanbanBoard implements OnInit {
   protected modalTaskOpen = signal<Task | null>(null);
   protected kanbanColumns = this.kanbanColumnService.kanban_columns;
 
-  async ngOnInit(): Promise<void> {
-    const selectedContextId = this.selectedContextId();
-    if (selectedContextId !== null)
+  constructor() {
+    effect(async () => {
+      const selectedContextId = this.selectedContextId();
       await this.kanbanColumnService.load(selectedContextId);
+    })
   }
 
   protected async onDeleteColumn(kanbanColumnId: number) {

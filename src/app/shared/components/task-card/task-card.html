@@ -4,8 +4,6 @@
   <li>tag</li>
 </ul>
 <div class="task-card-bottom">
-  @if(task().due) {
-    <span>{{ (task().due | date:'MMM d') }}</span>
-  }
-  <span>high</span>
+  <span>{{ task().due ? (task().due | date:'MMM d') : '' }}</span>
+  <span>{{ task().priority }}</span>
 </div>

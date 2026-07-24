@@ -2,7 +2,16 @@
   <form [formGroup]=taskForm>
     <app-input-field label="Name" type="text" formControlName="name"/>
     <app-input-field label="Due" type="date" formControlName="due"/>
+
+    <label>Priority</label>
+    <select formControlName="priority">
+      <option [value]="null">No priority</option>
+      @for (opt of priorityOptions; track opt.value) {
+      <option [value]="opt.value">{{ opt.key }}</option>
+      }
+    </select>
   </form>
+
 
   <app-modal-footer modal-footer>
     @if(type() === 'edit') {

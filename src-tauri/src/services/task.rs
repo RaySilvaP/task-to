@@ -82,6 +82,7 @@ impl<'a> TaskService<'a> {
             active_model.kanban_column_id = ActiveValue::Set(request.kanban_column_id);
             active_model.due = ActiveValue::Set(request.due);
             active_model.updated_at = ActiveValue::Set(chrono::Utc::now().to_rfc3339());
+            active_model.priority = ActiveValue::Set(request.priority);
 
             self.task_repository.update(active_model).await.unwrap();
 

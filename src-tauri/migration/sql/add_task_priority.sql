@@ -1,0 +1,2 @@
+ALTER TABLE task
+  ADD COLUMN priority TEXT NULL;

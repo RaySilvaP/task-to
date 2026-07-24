@@ -4,4 +4,11 @@ export default interface Task {
   position: number;
   kanban_column_id: number;
   due?: string;
+  priority?: TaskPriority;
+}
+
+export enum TaskPriority {
+  Low = "Low",
+  Medium = "Medium",
+  High = "High"
 }

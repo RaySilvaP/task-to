@@ -8,7 +8,12 @@ export class KanbanColumnService {
   private readonly _kanban_columns = signal<KanbanColumn[]>([]);
   public readonly kanban_columns = this._kanban_columns.asReadonly();
 
-  public async load(contextId: number) {
+  public async load(contextId: number | null) {
+    if(contextId === null) {
+      this._kanban_columns.set([]);
+      return;
+    }
+
     const columns = await invoke<KanbanColumn[]>('get_kanban_columns', { contextId });
     this._kanban_columns.set(columns);
   }

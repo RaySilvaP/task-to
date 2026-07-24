@@ -1,4 +1,13 @@
 use sea_orm::entity::prelude::*;
+use serde::{Deserialize, Serialize};
+
+#[derive(EnumIter, Clone, PartialEq, Debug, DeriveActiveEnum, Deserialize, Serialize)]
+#[sea_orm(rs_type = "String", db_type = "String(StringLen::None)", rename_all = "camelCase")]
+pub enum TaskPriority {
+    Low,
+    Medium,
+    High
+}
 
 #[derive(Clone, Debug, PartialEq, DeriveEntityModel)]
 #[sea_orm(table_name = "task")]
@@ -13,6 +22,8 @@ pub struct Model {
     pub kanban_column_id: i32,
 
     pub due: Option<String>,
+
+    pub priority: Option<TaskPriority>,
 
     pub updated_at: String,
 

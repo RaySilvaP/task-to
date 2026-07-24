@@ -33,7 +33,6 @@ export class KanbanPage implements OnInit {
     const target = event.target as HTMLSelectElement;
     const value = Number(target.value);
     this.contextService.setSelectedContext(value);
-    this.kanbanColumnService.load(value);
   }
 
   protected async onEditContext(context: Context) {
