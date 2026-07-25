@@ -1,4 +1,4 @@
-import { Component, effect, inject, OnInit, signal } from '@angular/core';
+import { Component, effect, inject, signal } from '@angular/core';
 import { ModalTask } from "../modal-task/modal-task";
 import { CdkDrag, CdkDragDrop, CdkDragHandle, CdkDropList, CdkDropListGroup, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { KanbanColumnService } from '../../../../services/kanban-column-service';
@@ -8,10 +8,11 @@ import KanbanColumn from '../../../../models/kanban-column';
 import Task from '../../../../models/task';
 import { TaskService } from '../../../../services/task-service';
 import { TaskCard } from '../../../../shared/components/task-card/task-card';
+import { ModalPrompt } from "../../../../shared/components/modal-prompt/modal-prompt";
 
 @Component({
   selector: 'app-kanban-board',
-  imports: [ModalTask, CdkDrag, CdkDropList, CdkDragHandle, CdkDropListGroup, ModalKanbanColumn, TaskCard],
+  imports: [ModalTask, CdkDrag, CdkDropList, CdkDragHandle, CdkDropListGroup, ModalKanbanColumn, TaskCard, ModalPrompt],
   templateUrl: './kanban-board.html',
   styleUrl: './kanban-board.css'
 })
@@ -22,6 +23,8 @@ export class KanbanBoard {
   protected selectedContextId = this.contextService.getSelectedContext();
   protected modalKanbanColumnOpen = signal<KanbanColumn | null>(null);
   protected modalTaskOpen = signal<Task | null>(null);
+  protected showTaskPromptModal = signal<number | null>(null);
+  protected showColumnPromptModal = signal<number | null>(null);
   protected kanbanColumns = this.kanbanColumnService.kanban_columns;
 
   constructor() {
@@ -38,6 +41,7 @@ export class KanbanBoard {
 
     await this.kanbanColumnService.delete(kanbanColumnId, selectedContextId);
     this.modalKanbanColumnOpen.set(null);
+    this.showColumnPromptModal.set(null);
   }
 
   protected async onEditColumn(kanbanColumn: KanbanColumn) {
@@ -60,6 +64,7 @@ export class KanbanBoard {
     await this.taskService.delete(taskId);
     this.kanbanColumnService.load(this.selectedContextId()!);
     this.modalTaskOpen.set(null);
+    this.showTaskPromptModal.set(null);
   }
 
   protected async dropKanbanColumn(event: CdkDragDrop<KanbanColumn[]>) {

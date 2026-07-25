@@ -22,7 +22,7 @@
   width: min(500px, calc(100vw - var(--xlg)));
   max-height: calc(100dvh - var(--xlg));
 
-  background: var(--surface-color, white);
+  background: white;
   border-radius: 12px;
   overflow: hidden;
 

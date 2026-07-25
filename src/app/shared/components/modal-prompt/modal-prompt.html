@@ -1,0 +1,8 @@
+<app-modal [title]="title()" (close)="cancel.emit()">
+  <p class="prompt-text">{{ prompt() }}</p>
+
+  <app-modal-footer modal-footer>
+    <app-button variant="secondary" (click)="cancel.emit()">{{ cancelText() }}</app-button>
+    <app-button variant="danger" (click)="confirm.emit()">{{ confirmText() }}</app-button>
+  </app-modal-footer>
+</app-modal>

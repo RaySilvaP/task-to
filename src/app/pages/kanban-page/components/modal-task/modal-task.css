@@ -12,3 +12,16 @@ form {
     font-size: var(--md);
   }
 }
+
+.selected-tag-field {
+  display: flex;
+  gap: var(--sm);
+  align-items: center;
+
+  span {
+    flex: 1;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+}

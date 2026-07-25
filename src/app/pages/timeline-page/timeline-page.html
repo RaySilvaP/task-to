@@ -9,8 +9,6 @@
 
 <app-timeline 
   [dateTime]="today()"
-  (pointerdown)="onSwipePointerDown($event)"
-  (pointerup)="onSwipePointerUp($event)"
 />
 
 <button class="action-btn" type="button" (click)="showBlockModal.set(true)">+</button>

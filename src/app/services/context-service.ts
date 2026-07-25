@@ -30,9 +30,11 @@ export class ContextService {
     this._contexts.set(contexts);
   }
 
-  public async add(name: string) {
-    await invoke('add_context', { context: { name } });
+  public async add(name: string): Promise<number> {
+    const contextId = await invoke<number>('add_context', { context: { name } });
     await this.load();
+
+    return contextId;
   }
 
   public async edit(context: Context) {

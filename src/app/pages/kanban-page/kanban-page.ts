@@ -1,4 +1,5 @@
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { KanbanBoard } from './components/kanban-board/kanban-board';
 import { KanbanActionButton } from './components/kanban-action-button/kanban-action-button';
 import { ContextService } from '../../services/context-service';
@@ -7,10 +8,12 @@ import Context from '../../models/context';
 import { KanbanColumnService } from '../../services/kanban-column-service';
 import { TaskService } from '../../services/task-service';
 import { Button } from "../../shared/components/button/button";
+import { ModalPrompt } from "../../shared/components/modal-prompt/modal-prompt";
+import { Select } from "../../shared/components/select/select";
 
 @Component({
   selector: 'app-kanban-page',
-  imports: [KanbanBoard, KanbanActionButton, ModalContext, Button],
+  imports: [KanbanBoard, KanbanActionButton, ModalContext, Button, ModalPrompt, Select, FormsModule],
   templateUrl: './kanban-page.html',
   styleUrl: './kanban-page.css',
   providers: [ContextService, KanbanColumnService, TaskService]
@@ -19,6 +22,7 @@ export class KanbanPage implements OnInit {
   protected readonly contextService = inject(ContextService);
   protected readonly kanbanColumnService = inject(KanbanColumnService);
   protected isModalOpen = signal<boolean>(false);
+  protected showPromptModal = signal<number | null>(null);
   protected contexts = this.contextService.contexts;
   protected selectedContextId = this.contextService.getSelectedContext();
 
@@ -29,10 +33,8 @@ export class KanbanPage implements OnInit {
     console.log(this.selectedContext())
   }
 
-  protected onSelectContext(event: Event) {
-    const target = event.target as HTMLSelectElement;
-    const value = Number(target.value);
-    this.contextService.setSelectedContext(value);
+  protected onSelectContext(value: string | number) {
+    this.contextService.setSelectedContext(Number(value));
   }
 
   protected async onEditContext(context: Context) {
@@ -41,11 +43,11 @@ export class KanbanPage implements OnInit {
   }
 
   protected async onDeleteContext(contextId: number) {
-    console.log(contextId);
     const contextIndex = this.contexts().findIndex(c => c.id === contextId);
 
     await this.contextService.delete(contextId);
     this.isModalOpen.set(false);
+    this.showPromptModal.set(null);
 
     if (this.contexts().length > 0 && contextIndex === this.contexts().length) {
       const previousContext = this.contexts().at(contextIndex - 1);

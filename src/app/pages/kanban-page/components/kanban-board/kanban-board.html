@@ -1,28 +1,41 @@
-<ul class="column-list" cdkDropList cdkDropListGroup cdkDropListOrientation="horizontal" (cdkDropListDropped)="dropKanbanColumn($event)">
-  @for(kanbanColumn of kanbanColumns(); track kanbanColumn.id) {
-    <li class="column-item" cdkDrag cdkDragLockAxis="x">
-      <div class="kanban-column">
-        <div class="column-header" cdkDragHandle>
-          <div class="column-info">
-            <h4 class="column-name">{{kanbanColumn.name}}</h4>
-            <span class="column-tasks-count">{{kanbanColumn.tasks.length}}</span>
+@if(kanbanColumns().length > 0) {
+  <ul class="column-list" cdkDropList cdkDropListGroup cdkDropListOrientation="horizontal" (cdkDropListDropped)="dropKanbanColumn($event)">
+    @for(kanbanColumn of kanbanColumns(); track kanbanColumn.id) {
+      <li class="column-item" cdkDrag cdkDragLockAxis="x">
+        <div class="kanban-column">
+          <div class="column-header" cdkDragHandle>
+            <div class="column-info">
+              <h4 class="column-name">{{kanbanColumn.name}}</h4>
+              <span class="column-tasks-count">{{kanbanColumn.tasks.length}}</span>
+            </div>
+            <button class="column-edit-btn" type="button" (click)="modalKanbanColumnOpen.set(kanbanColumn)">
+              <img src="/assets/edit_24dp_999999_FILL0_wght400_GRAD0_opsz24.svg" alt="Edit column list">
+            </button>
           </div>
-          <button class="column-edit-btn" type="button" (click)="modalKanbanColumnOpen.set(kanbanColumn)">
-            <img src="/assets/edit_24dp_999999_FILL0_wght400_GRAD0_opsz24.svg" alt="Edit column list">
-          </button>
-        </div>
 
-        <ul class="task-list" cdkDropList [cdkDropListData]="kanbanColumn.tasks" (cdkDropListDropped)="dropTask($event, kanbanColumn.id)">
-          @for(task of kanbanColumn.tasks; track task.id) {
-            <li class="task-item" cdkDrag>
-              <app-task-card [task]="task" (click)="modalTaskOpen.set(task)" />
-            </li>
-          }
-        </ul>
-      </div>
-    </li>
-  }
-</ul>
+          <ul class="task-list" cdkDropList [cdkDropListData]="kanbanColumn.tasks" (cdkDropListDropped)="dropTask($event, kanbanColumn.id)">
+            @if(kanbanColumn.tasks.length > 0) {
+              @for(task of kanbanColumn.tasks; track task.id) {
+                <li class="task-item" cdkDrag>
+                  <app-task-card [task]="task" (click)="modalTaskOpen.set(task)" />
+                </li>
+              }
+            }
+            @else {
+              <span class="no-items-text">Drop tasks here or create a new one.</span>
+            }
+          </ul>
+        </div>
+      </li>
+    }
+  </ul>
+}
+@else if(selectedContextId() === null) {
+  <span class="no-items-text">Select or create a context to get started.</span>
+}
+@else {
+  <span class="no-items-text">No columns yet. Create one to get started.</span>
+}
 
 @if(modalKanbanColumnOpen() !== null) {
 <app-modal-kanban-column 
@@ -30,10 +43,34 @@
   type="edit" 
   (close)="modalKanbanColumnOpen.set(null)"
   (submit)="onEditColumn($event)"
-  (delete)="onDeleteColumn($event)"
+  (delete)="showColumnPromptModal.set($event)"
 />
 }
 
 @if(modalTaskOpen() !== null) {
-<app-modal-task [task]="modalTaskOpen() ?? undefined" type="edit" (close)="modalTaskOpen.set(null)" (submit)="onEditTask($event)" (delete)="onDeleteTask($event)" />
+<app-modal-task 
+  [task]="modalTaskOpen() ?? undefined" 
+  type="edit" 
+  (close)="modalTaskOpen.set(null)" 
+  (submit)="onEditTask($event)" 
+  (delete)="showTaskPromptModal.set($event)" 
+/>
+}
+
+@if(showColumnPromptModal() !== null) {
+  <app-modal-prompt
+    prompt="Deleting the column will also delete the tasks."
+    confirmText="Delete"
+    (cancel)="showColumnPromptModal.set(null)"
+    (confirm)="onDeleteColumn(showColumnPromptModal()!)"
+  />
+}
+
+@if(showTaskPromptModal() !== null) {
+  <app-modal-prompt
+    prompt="Deleting the task will also delete any time block related."
+    confirmText="Delete"
+    (cancel)="showTaskPromptModal.set(null)"
+    (confirm)="onDeleteTask(showTaskPromptModal()!)"
+  />
 }

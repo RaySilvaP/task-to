@@ -25,8 +25,8 @@
 
 .clock {
   position: relative;
-  width: 340px;
-  height: 340px;
+  width: min(340px, calc(100vw - 3rem));
+  aspect-ratio: 1;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -34,8 +34,8 @@
 
 .clock-phase {
   position: absolute;
-  top: 4rem;
-  font-size: 1rem;
+  top: 20%;
+  font-size: clamp(0.75rem, 3vw, 1rem);
   font-weight: 600;
   letter-spacing: 0.15em;
   color: var(--text-muted, #9ca3af);
@@ -65,7 +65,7 @@
 }
 
 .clock-time {
-  font-size: 4.5rem;
+  font-size: clamp(2.5rem, 12vw, 3.5rem);
   font-weight: 700;
   font-variant-numeric: tabular-nums;
   color: var(--text, #111827);
@@ -73,9 +73,9 @@
 }
 
 .clock-start-btn {
-  font-size: 2rem;
+  font-size: clamp(1.5rem, 7.5vw, 2.5rem);
   font-weight: 600;
-  padding: 1rem 2rem;
+  padding: 0.75rem 1.5rem;
   z-index: 1;
 }
 

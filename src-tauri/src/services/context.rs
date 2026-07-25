@@ -29,7 +29,7 @@ impl<'a> ContextService<'a> {
             .collect()
     }
 
-    pub async fn add(&self, request: ContextRequest) {
+    pub async fn add(&self, request: ContextRequest) -> i32 {
         println!("Adding new context...");
 
         let now = chrono::Utc::now().to_rfc3339();
@@ -44,6 +44,8 @@ impl<'a> ContextService<'a> {
             .unwrap();
 
         println!("Context added successfully: {}", context.id);
+
+        context.id
     }
 
     pub async fn edit(&self, context_id: i32, request: ContextRequest) {

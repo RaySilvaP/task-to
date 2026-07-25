@@ -1,12 +1,12 @@
 use crate::{
     database::Database,
     repositories::{
-        context::ContextRepository, kanban_column::KanbanColumnRepository, task::TaskRepository,
-        time_block::TimeBlockRepository,
+        context::ContextRepository, kanban_column::KanbanColumnRepository, tag::TagRepository,
+        task::TaskRepository, time_block::TimeBlockRepository,
     },
     services::{
-        context::ContextService, kanban_column::KanbanColumnService, task::TaskService,
-        time_block::TimeBlockService,
+        context::ContextService, kanban_column::KanbanColumnService, tag::TagService,
+        task::TaskService, time_block::TimeBlockService,
     },
 };
 
@@ -33,5 +33,9 @@ impl AppState {
 
     pub fn time_block_service(&self) -> TimeBlockService<'_> {
         TimeBlockService::new(TimeBlockRepository::new(&self.db))
+    }
+
+    pub fn tag_service(&self) -> TagService<'_> {
+        TagService::new(TagRepository::new(&self.db))
     }
 }

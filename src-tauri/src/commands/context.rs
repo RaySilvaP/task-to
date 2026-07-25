@@ -12,9 +12,9 @@ pub async fn get_contexts(state: State<'_, AppState>) -> Result<Vec<ContextRespo
 }
 
 #[tauri::command]
-pub async fn add_context(context: ContextRequest, state: State<'_, AppState>) -> Result<(), ()> {
-    state.context_service().add(context).await;
-    Ok(())
+pub async fn add_context(context: ContextRequest, state: State<'_, AppState>) -> Result<i32, ()> {
+    let context_id = state.context_service().add(context).await;
+    Ok(context_id)
 }
 
 #[tauri::command]

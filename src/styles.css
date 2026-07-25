@@ -1,7 +1,13 @@
-/* You can add global styles to this file, and also import other style files */
 :root {
   --accent-color: #083d77;
+  --danger-color: #d32f2f;
+  --warn-color: #f59e0b;
+  --success-color: #16a34a;
   --background-color: #EFEFEF;
+  --surface-color: #ffffff88;
+  --border-color: #d1d5db;
+  --text-color: #111827;
+  --text-muted: #9ca3af;
   --xsm: 0.5rem;
   --sm: 0.875rem;
   --md: 1rem;

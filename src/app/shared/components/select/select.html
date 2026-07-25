@@ -1,0 +1,17 @@
+@if (label()) {
+  <label>{{ label() }}</label>
+}
+
+<div class="select-wrapper">
+  <select
+    class="select"
+    [disabled]="_combinedDisabled"
+    [value]="_value"
+    (change)="onChangeEvent($event)"
+    (blur)="onBlur()"
+  >
+    <option value="" disabled>{{ placeholder() }}</option>
+    <ng-content />
+  </select>
+  <img class="select-arrow" src="/assets/arrow_drop_down_24dp_999999_FILL0_wght400_GRAD0_opsz24.svg" alt="">
+</div>

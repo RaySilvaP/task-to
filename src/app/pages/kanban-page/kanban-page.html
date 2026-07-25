@@ -1,10 +1,14 @@
 <div class="context-header">
-  <select class="context-selector" (change)="onSelectContext($event)">
-    <option disabled [selected]="!selectedContext()">Select the context</option>
+  <app-select
+    class="context-selector"
+    [ngModel]="selectedContextId()"
+    (ngModelChange)="onSelectContext($event)"
+    placeholder="Select a context"
+  >
     @for(context of contexts(); track context.id) {
-      <option [selected]="selectedContext()?.id === context.id" [value]="context.id">{{context.name}}</option>
+      <option [value]="context.id">{{ context.name }}</option>
     }
-  </select>
+  </app-select>
   @if(selectedContext()) {
     <app-button class="edit-context-btn" variant="secondary" (click)="isModalOpen.set(true)">Edit Context</app-button>
   }
@@ -19,6 +23,15 @@
     type="edit" 
     (close)="isModalOpen.set(false)" 
     (submit)="onEditContext($event)" 
-    (delete)="onDeleteContext($event)"
+    (delete)="showPromptModal.set($event)"
+  />
+}
+
+@if(showPromptModal() !== null) {
+  <app-modal-prompt 
+    prompt="Deleting the context will also delete the columns and tasks." 
+    (cancel)="showPromptModal.set(null)"
+    (confirm)="onDeleteContext(showPromptModal()!)"
+    confirmText="Delete"
   />
 }

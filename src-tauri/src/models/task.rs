@@ -2,11 +2,15 @@ use sea_orm::entity::prelude::*;
 use serde::{Deserialize, Serialize};
 
 #[derive(EnumIter, Clone, PartialEq, Debug, DeriveActiveEnum, Deserialize, Serialize)]
-#[sea_orm(rs_type = "String", db_type = "String(StringLen::None)", rename_all = "camelCase")]
+#[sea_orm(
+    rs_type = "String",
+    db_type = "String(StringLen::None)",
+    rename_all = "camelCase"
+)]
 pub enum TaskPriority {
     Low,
     Medium,
-    High
+    High,
 }
 
 #[derive(Clone, Debug, PartialEq, DeriveEntityModel)]
@@ -25,6 +29,8 @@ pub struct Model {
 
     pub priority: Option<TaskPriority>,
 
+    pub tag_id: Option<i32>,
+
     pub updated_at: String,
 
     pub created_at: String,
@@ -38,11 +44,23 @@ pub enum Relation {
         to = "super::kanban_column::Column::Id"
     )]
     KanbanColumn,
+    #[sea_orm(
+        belongs_to = "super::tag::Entity",
+        from = "Column::TagId",
+        to = "super::tag::Column::Id"
+    )]
+    Tag,
 }
 
 impl Related<super::kanban_column::Entity> for Entity {
     fn to() -> RelationDef {
         Relation::KanbanColumn.def()
+    }
+}
+
+impl Related<super::tag::Entity> for Entity {
+    fn to() -> RelationDef {
+        Relation::Tag.def()
     }
 }
 

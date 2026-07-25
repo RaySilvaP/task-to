@@ -10,4 +10,13 @@ import Task from '../../../models/task';
 })
 export class TaskCard {
   public task = input.required<Task>();
+
+  protected priorityClass(priority: string | undefined): string {
+    switch (priority) {
+      case 'Low': return 'priority-low';
+      case 'Medium': return 'priority-medium';
+      case 'High': return 'priority-high';
+      default: return '';
+    }
+  }
 }

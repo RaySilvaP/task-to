@@ -4,6 +4,7 @@ pub mod context;
 pub mod kanban_column;
 pub mod task;
 pub mod time_block;
+pub mod tag;
 
 #[derive(Debug, Deserialize)]
 pub struct OrderRequest {

@@ -3,15 +3,22 @@
     <app-input-field label="Name" type="text" formControlName="name"/>
     <app-input-field label="Due" type="date" formControlName="due"/>
 
-    <label>Priority</label>
-    <select formControlName="priority">
-      <option [value]="null">No priority</option>
+    <app-select label="Priority" formControlName="priority">
+      <option selected value="">No priority</option>
       @for (opt of priorityOptions; track opt.value) {
-      <option [value]="opt.value">{{ opt.key }}</option>
+        <option [value]="opt.value">{{ opt.key }}</option>
       }
-    </select>
-  </form>
+    </app-select>
 
+    <div class="selected-tag-field">
+      <app-button (click)="showTagModal.set(true)" variant="secondary">
+        Select Tag
+      </app-button>
+      @if(selectedTag() !== null) {
+        <app-tag-component [tag]="selectedTag()!"/>
+      }
+    </div>
+  </form>
 
   <app-modal-footer modal-footer>
     @if(type() === 'edit') {
@@ -21,3 +28,7 @@
     <app-button [disabled]="taskForm.invalid" (click)="onSubmitForm()" variant="primary">Confirm</app-button>
   </app-modal-footer>
 </app-modal>
+
+@if(showTagModal()) {
+  <app-modal-tag (close)="showTagModal.set(false)" (submit)="selectedTag.set($event)"/>
+}

@@ -44,6 +44,12 @@
   font-size: var(--md);
   background: var(--accent-color);
   border-radius: var(--xsm);
+  cursor: pointer;
+}
+
+.action-item.disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
 }
 
 .action-item:last-child {

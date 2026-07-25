@@ -1,9 +1,5 @@
 <h5 class="task-title">{{task().name}}</h5>
-
-<ul class="tag-list">
-  <li>tag</li>
-</ul>
 <div class="task-card-bottom">
   <span>{{ task().due ? (task().due | date:'MMM d') : '' }}</span>
-  <span>{{ task().priority }}</span>
+  <span [class]="priorityClass(task().priority)">{{ task().priority }}</span>
 </div>

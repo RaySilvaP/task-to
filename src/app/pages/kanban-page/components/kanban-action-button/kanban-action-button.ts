@@ -21,8 +21,17 @@ export class KanbanActionButton {
   private taskService = inject(TaskService);
   private elementRef = inject(ElementRef);
   protected selectedContextId = this.contextService.getSelectedContext();
+  protected kanbanColumns = this.kanbanColumnService.kanban_columns;
   protected isOpen = signal<boolean>(false);
   protected isModalOpen = signal<'none' | 'task' | 'context' | 'column'>('none');
+
+  protected canOpenColumn() {
+    return this.selectedContextId() !== null;
+  }
+
+  protected canOpenTask() {
+    return this.selectedContextId() !== null && this.kanbanColumns().length > 0;
+  }
 
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent) {
@@ -51,7 +60,8 @@ export class KanbanActionButton {
   }
 
   protected async onCreateContext(context: Context) {
-    await this.contextService.add(context.name);
+    const contextId = await this.contextService.add(context.name);
+    this.contextService.setSelectedContext(contextId);
     this.isModalOpen.set('none');
     this.isOpen.set(false);
   }

@@ -1,7 +1,7 @@
 <ul class="actions-list" [class.open]="isOpen()">
-  <li class="action-item" (click)="isModalOpen.set('task')">task</li>
-  <li class="action-item" (click)="isModalOpen.set('context')">context</li>
-  <li class="action-item" (click)="isModalOpen.set('column')">column</li>
+  <li class="action-item" (click)="isModalOpen.set('context')">Context</li>
+  <li class="action-item" [class.disabled]="!canOpenColumn()" (click)="canOpenColumn() && isModalOpen.set('column')">Column</li>
+  <li class="action-item" [class.disabled]="!canOpenTask()" (click)="canOpenTask() && isModalOpen.set('task')">Task</li>
 </ul>
 <button class="action-btn" type="button" (click)="isOpen.set(!isOpen()); $event.stopPropagation()">+</button>
 

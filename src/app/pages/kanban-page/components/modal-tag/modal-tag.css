@@ -1,0 +1,64 @@
+form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--md);
+}
+
+.color-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text, #111827);
+}
+
+.tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--xsm);
+}
+
+.tag-chip {
+  padding: 0.2rem 0.6rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: white;
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: opacity 150ms ease, transform 150ms ease;
+}
+
+.tag-chip:hover {
+  opacity: 0.85;
+  transform: scale(1.05);
+}
+
+.color-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--xsm);
+}
+
+.color-swatch {
+  width: 2rem;
+  height: 2rem;
+  border: 2px solid transparent;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: transform 150ms ease, border-color 150ms ease;
+}
+
+.color-swatch:hover {
+  transform: scale(1.15);
+}
+
+.color-swatch.selected {
+  border-color: var(--text, #111827);
+  transform: scale(1.15);
+}
+
+.tag-name {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--text, #111827);
+  padding: var(--xsm) 0;
+}
