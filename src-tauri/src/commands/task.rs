@@ -9,9 +9,10 @@ use crate::{
 #[tauri::command]
 pub async fn get_tasks(
     name_filter: Option<String>,
+    tag_name_filter: Option<String>,
     state: State<'_, AppState>,
 ) -> Result<Vec<TaskResponse>, ()> {
-    let tasks = state.task_service().get_all(name_filter).await;
+    let tasks = state.task_service().get_all(name_filter, tag_name_filter).await;
     Ok(tasks)
 }
 

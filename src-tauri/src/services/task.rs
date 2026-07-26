@@ -18,12 +18,12 @@ impl<'a> TaskService<'a> {
         TaskService { task_repository }
     }
 
-    pub async fn get_all(&self, name_filter: Option<String>) -> Vec<TaskResponse> {
-        println!("Getting tasks filtered by name: {name_filter:?}...");
+    pub async fn get_all(&self, name_filter: Option<String>, tag_name_filter: Option<String>) -> Vec<TaskResponse> {
+        println!("Getting tasks filtered by name: {name_filter:?}, tag_name: {tag_name_filter:?}...");
 
         let tasks = self
             .task_repository
-            .get_all(name_filter)
+            .get_all(name_filter, tag_name_filter)
             .await
             .unwrap();
 

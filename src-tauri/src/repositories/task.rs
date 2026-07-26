@@ -1,6 +1,9 @@
-use sea_orm::{ActiveModelTrait, ColumnTrait, DbErr, EntityTrait, QueryFilter, TransactionTrait};
+use sea_orm::{
+    ActiveModelTrait, ColumnTrait, Condition, DbErr, EntityTrait, JoinType, QueryFilter,
+    QuerySelect, RelationTrait, TransactionTrait,
+};
 
-use crate::{database::Database, models::task};
+use crate::{database::Database, models::{task, tag}};
 
 pub struct TaskRepository<'a> {
     db: &'a Database,
@@ -11,11 +14,20 @@ impl<'a> TaskRepository<'a> {
         TaskRepository { db }
     }
 
-    pub async fn get_all(&self, name_filter: Option<String>) -> Result<Vec<task::Model>, DbErr> {
-        let mut query = task::Entity::find();
+    pub async fn get_all(&self, name_filter: Option<String>, tag_name_filter: Option<String>) -> Result<Vec<task::Model>, DbErr> {
+        let mut query = task::Entity::find()
+            .join(JoinType::LeftJoin, task::Relation::Tag.def());
 
+        let mut conditions = Condition::any();
         if let Some(name) = name_filter {
-            query = query.filter(task::Column::Name.contains(&name));
+            conditions = conditions.add(task::Column::Name.contains(&name));
+        }
+        if let Some(tag_name) = tag_name_filter {
+            conditions = conditions.add(tag::Column::Name.contains(&tag_name));
+        }
+
+        if !conditions.is_empty() {
+            query = query.filter(conditions);
         }
 
         query.all(self.db.connection()).await

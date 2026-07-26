@@ -6,8 +6,8 @@ import Order from '../models/order';
 @Injectable()
 export class TaskService {
 
-  public async get(nameFilter?: string) {
-    return await invoke<Task[]>('get_tasks', { nameFilter })
+  public async get(nameFilter?: string, tagNameFilter?: string) {
+    return await invoke<Task[]>('get_tasks', { nameFilter, tagNameFilter })
   }
 
   public async add(task: Task) {

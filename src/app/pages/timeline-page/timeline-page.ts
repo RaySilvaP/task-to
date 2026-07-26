@@ -1,22 +1,28 @@
 import { DatePipe } from '@angular/common';
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { Timeline } from "./components/timeline/timeline";
 import { ModalTimeBlock } from "./components/modal-time-block/modal-time-block";
 import { TaskService } from '../../services/task-service';
 import { TimeBlockService } from '../../services/time-block-service';
 import TimeBlock from '../../models/timeBlock';
+import { TagService } from '../../services/tag-service';
 
 @Component({
   selector: 'app-timeline-page',
   imports: [DatePipe, Timeline, ModalTimeBlock],
   templateUrl: './timeline-page.html',
   styleUrl: './timeline-page.css',
-  providers: [TaskService, TimeBlockService]
+  providers: [TaskService, TimeBlockService, TagService]
 })
-export class TimelinePage {
+export class TimelinePage implements OnInit{
   private readonly timeBlockService = inject(TimeBlockService);
+  private readonly tagService = inject(TagService);
   protected today = signal<Date>(new Date(Date.now()));
   protected showBlockModal = signal<boolean>(false);
+
+  ngOnInit(): void {
+    this.tagService.load();
+  }
 
   protected resetDate() {
     this.today.set(new Date(Date.now()));

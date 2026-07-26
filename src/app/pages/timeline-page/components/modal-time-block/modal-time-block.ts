@@ -65,6 +65,7 @@ export class ModalTimeBlock implements OnInit {
     }
 
     this.tasks.set(await this.taskService.get());
+    console.log(this.tasks());
     if (block?.task_id)
       this.selectedTask = this.tasks().find(t => t.id === block.task_id);
 
@@ -116,6 +117,6 @@ export class ModalTimeBlock implements OnInit {
   }
 
   protected async onChangeFilter(filter: string) {
-    this.tasks.set(await this.taskService.get(filter));
+    this.tasks.set(await this.taskService.get(filter, filter));
   }
 }

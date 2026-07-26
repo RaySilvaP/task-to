@@ -22,6 +22,7 @@ import { TagService } from '../../services/tag-service';
 export class KanbanPage implements OnInit {
   protected readonly contextService = inject(ContextService);
   protected readonly kanbanColumnService = inject(KanbanColumnService);
+  protected readonly tagService = inject(TagService);
   protected isModalOpen = signal<boolean>(false);
   protected showPromptModal = signal<number | null>(null);
   protected contexts = this.contextService.contexts;
