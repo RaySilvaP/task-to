@@ -8,7 +8,8 @@ pub struct TaskRequest {
     pub position: i32,
     pub kanban_column_id: i32,
     pub due: Option<String>,
-    pub priority: Option<TaskPriority>
+    pub priority: Option<TaskPriority>,
+    pub tag_id: Option<i32>,
 }
 
 #[derive(Debug, Serialize)]
@@ -18,5 +19,6 @@ pub struct TaskResponse {
     pub position: i32,
     pub kanban_column_id: i32,
     pub due: Option<String>,
-    pub priority: Option<TaskPriority>
+    pub priority: Option<TaskPriority>,
+    pub tag_id: Option<i32>,
 }

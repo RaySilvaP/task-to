@@ -26,9 +26,18 @@
   </form>
 
   <app-modal-footer modal-footer>
-    @if(selectedMock) {
-      <app-button (click)="onDelete()" variant="danger">Delete</app-button>
+    @if(selectedTag) {
+      <app-button (click)="showPromptModal.set(true)" variant="danger">Delete</app-button>
     }
     <app-button [disabled]="tagForm.invalid" (click)="onSubmit()" variant="primary">Confirm</app-button>
   </app-modal-footer>
 </app-modal>
+
+@if(showPromptModal()) {
+  <app-modal-prompt 
+    prompt="Deleting the tag will remove it from all the tasks."
+    (cancel)="showPromptModal.set(false)"
+    (confirm)="onDelete()"
+    confirmText="Delete"
+  />
+}

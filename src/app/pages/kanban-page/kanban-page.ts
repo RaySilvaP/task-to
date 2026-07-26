@@ -10,13 +10,14 @@ import { TaskService } from '../../services/task-service';
 import { Button } from "../../shared/components/button/button";
 import { ModalPrompt } from "../../shared/components/modal-prompt/modal-prompt";
 import { Select } from "../../shared/components/select/select";
+import { TagService } from '../../services/tag-service';
 
 @Component({
   selector: 'app-kanban-page',
   imports: [KanbanBoard, KanbanActionButton, ModalContext, Button, ModalPrompt, Select, FormsModule],
   templateUrl: './kanban-page.html',
   styleUrl: './kanban-page.css',
-  providers: [ContextService, KanbanColumnService, TaskService]
+  providers: [ContextService, KanbanColumnService, TaskService, TagService]
 })
 export class KanbanPage implements OnInit {
   protected readonly contextService = inject(ContextService);
@@ -30,7 +31,6 @@ export class KanbanPage implements OnInit {
 
   async ngOnInit(): Promise<void> {
     await this.contextService.load();
-    console.log(this.selectedContext())
   }
 
   protected onSelectContext(value: string | number) {

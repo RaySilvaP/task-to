@@ -19,6 +19,11 @@
   color: var(--text, #111827);
 }
 
+.task-tag {
+  font-size: 0.7rem;
+  margin-bottom: var(--xsm);
+}
+
 .task-card-bottom {
   display: flex;
   justify-content: space-between;

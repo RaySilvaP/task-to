@@ -1,4 +1,4 @@
-import { Component, inject, input, OnInit, output } from '@angular/core';
+import { Component, effect, inject, input, OnInit, output, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Modal } from '../../../../shared/components/modal/modal';
 import { ModalFooter } from '../../../../shared/components/modal-footer/modal-footer';
@@ -6,14 +6,17 @@ import { Button } from '../../../../shared/components/button/button';
 import { InputField } from '../../../../shared/components/input-field/input-field';
 import Tag from '../../../../models/tag';
 import { TagComponent } from "../../../../shared/components/tag-component/tag-component";
+import { TagService } from '../../../../services/tag-service';
+import { ModalPrompt } from '../../../../shared/components/modal-prompt/modal-prompt';
 
 @Component({
   selector: 'app-modal-tag',
-  imports: [Modal, ModalFooter, Button, ReactiveFormsModule, InputField, TagComponent],
+  imports: [Modal, ModalFooter, Button, ReactiveFormsModule, InputField, TagComponent, ModalPrompt],
   templateUrl: './modal-tag.html',
   styleUrl: './modal-tag.css',
 })
 export class ModalTag implements OnInit {
+  private readonly tagService = inject(TagService);
   private fb = inject(FormBuilder);
   protected tagForm: FormGroup;
   protected colors = [
@@ -21,15 +24,9 @@ export class ModalTag implements OnInit {
     '#22c55e', '#14b8a6', '#06b6d4', '#3b82f6',
     '#6366f1', '#a855f7', '#d946ef', '#ec4899',
   ];
-  protected mockTags: Tag[] = [
-    { id: 1, name: 'backend', color: '#ef4444' },
-    { id: 2, name: 'frontend', color: '#3b82f6' },
-    { id: 3, name: 'infra', color: '#22c55e' },
-    { id: 4, name: 'design', color: '#a855f7' },
-    { id: 5, name: 'bug', color: '#f59e0b' },
-  ];
-  protected selectedMock: Tag | null = null;
-  type = input<'create' | 'edit'>('create');
+  protected tags = this.tagService.tags;
+  protected selectedTag: Tag | null = null;
+  protected showPromptModal = signal<boolean>(false);
   tag = input<Tag>();
   close = output();
   submit = output<Tag>();
@@ -40,31 +37,37 @@ export class ModalTag implements OnInit {
       name: ['', Validators.required],
       color: ['#3b82f6', Validators.required],
     });
+
+    effect(() => {
+      console.log(this.tag());
+    })
   }
 
-  ngOnInit(): void {
-    if (this.type() === 'edit') {
+  async ngOnInit(): Promise<void> {
+    if (this.tag()) {
       this.tagForm.patchValue({
-        name: this.tag()?.name ?? '',
-        color: this.tag()?.color ?? '#3b82f6',
+        name: this.tag()!.name ?? '',
+        color: this.tag()!.color ?? '#3b82f6',
       }, { emitEvent: false });
+
+      this.selectedTag = this.tag()!;
     }
 
     this.tagForm.get('name')?.valueChanges.subscribe(name => {
-      const match = this.mockTags.find(t => t.name === name);
+      const match = this.tags().find(t => t.name === name);
       if (match) {
-        this.selectedMock = match;
+        this.selectedTag = match;
         this.tagForm.patchValue({ color: match.color }, { emitEvent: false });
       } else {
-        this.selectedMock = null;
+        this.selectedTag = null;
       }
     });
   }
 
   protected filteredTags(): Tag[] {
     const name = this.tagForm.get('name')?.value?.toLowerCase() ?? '';
-    if (!name) return this.mockTags;
-    return this.mockTags.filter(t => t.name.toLowerCase().includes(name));
+    if (!name) return this.tags();
+    return this.tags().filter(t => t.name.toLowerCase().includes(name));
   }
 
   protected selectColor(color: string) {
@@ -72,7 +75,7 @@ export class ModalTag implements OnInit {
   }
 
   protected selectTag(tag: Tag) {
-    this.selectedMock = tag;
+    this.selectedTag = tag;
     this.tagForm.patchValue({ name: tag.name, color: tag.color });
   }
 
@@ -82,8 +85,8 @@ export class ModalTag implements OnInit {
     const { name, color } = this.tagForm.value;
 
     const result = {
-      id: this.selectedMock?.id ?? -1,
-      name: this.selectedMock?.name ?? name,
+      id: this.selectedTag?.id ?? -1,
+      name: this.selectedTag?.name ?? name,
       color,
     } as Tag;
 
@@ -91,6 +94,8 @@ export class ModalTag implements OnInit {
   }
 
   protected onDelete() {
-    this.delete.emit(this.selectedMock?.id ?? this.tag()!.id);
+    this.delete.emit(this.selectedTag?.id ?? this.tag()!.id);
+    this.tagForm.reset();
+    this.showPromptModal.set(false);
   }
 }

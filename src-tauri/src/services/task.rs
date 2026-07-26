@@ -83,6 +83,7 @@ impl<'a> TaskService<'a> {
             active_model.due = ActiveValue::Set(request.due);
             active_model.updated_at = ActiveValue::Set(chrono::Utc::now().to_rfc3339());
             active_model.priority = ActiveValue::Set(request.priority);
+            active_model.tag_id = ActiveValue::Set(request.tag_id);
 
             self.task_repository.update(active_model).await.unwrap();
 

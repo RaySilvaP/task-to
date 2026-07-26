@@ -9,6 +9,7 @@ import { Select } from '../../../../shared/components/select/select';
 import { ModalTag } from "../modal-tag/modal-tag";
 import Tag from '../../../../models/tag';
 import { TagComponent } from "../../../../shared/components/tag-component/tag-component";
+import { TagService } from '../../../../services/tag-service';
 
 @Component({
   selector: 'app-modal-task',
@@ -17,6 +18,7 @@ import { TagComponent } from "../../../../shared/components/tag-component/tag-co
   styleUrl: './modal-task.css',
 })
 export class ModalTask implements OnInit {
+  private readonly tagService = inject(TagService);
   private fb = inject(FormBuilder);
   protected taskForm: FormGroup;
   protected priorityOptions = Object.entries(TaskPriority)
@@ -36,9 +38,6 @@ export class ModalTask implements OnInit {
       due: [],
       priority: []
     });
-    effect(() => {
-      console.log(this.selectedTag())
-    })
   }
 
   ngOnInit(): void {
@@ -50,6 +49,11 @@ export class ModalTask implements OnInit {
       },
       { emitEvent: false }
     );
+
+    if (this.task()) {
+      const tags = this.tagService.tags();
+      this.selectedTag.set(tags.find(t => t.id === this.task()!.tag_id) ?? null);
+    }
   }
 
   protected onSubmitForm() {
@@ -66,6 +70,7 @@ export class ModalTask implements OnInit {
       priority: priority === '' ? undefined : priority,
       kanban_column_id: this.task()?.kanban_column_id ?? -1,
       position: this.task()?.position ?? 1,
+      tag_id: this.selectedTag()?.id
     } as Task;
 
     this.submit.emit(task);
@@ -73,5 +78,25 @@ export class ModalTask implements OnInit {
 
   protected onDelete() {
     this.delete.emit(this.task()!.id);
+  }
+
+  protected async onSelectTag(tag: Tag) {
+    if (tag.id > 0) {
+      await this.tagService.edit(tag);
+      this.selectedTag.set(tag);
+    }
+    else {
+      tag.id = await this.tagService.add(tag);
+      this.selectedTag.set(tag);
+    }
+
+    await this.tagService.load();
+    this.showTagModal.set(false);
+  }
+
+  protected async onDeleteTag(tagId: number) {
+    await this.tagService.delete(tagId);
+    await this.tagService.load();
+    this.selectedTag.set(null);
   }
 }

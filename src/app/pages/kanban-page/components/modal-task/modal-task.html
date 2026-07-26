@@ -30,5 +30,10 @@
 </app-modal>
 
 @if(showTagModal()) {
-  <app-modal-tag (close)="showTagModal.set(false)" (submit)="selectedTag.set($event)"/>
+  <app-modal-tag 
+    (close)="showTagModal.set(false)" 
+    (submit)="onSelectTag($event)"
+    (delete)="onDeleteTag($event)"
+    [tag]="selectedTag() ?? undefined"
+  />
 }
