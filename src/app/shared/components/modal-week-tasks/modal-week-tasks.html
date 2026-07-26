@@ -1,0 +1,12 @@
+<app-modal [title]="'Week\'s Tasks'" (close)="close.emit()">
+  @if(weekTasks().length > 0) {
+    <ul class="task-list">
+      @for(task of weekTasks(); track task.id) {
+      <app-task-card class="task-item" [task]="task" />
+        }
+    </ul>
+  }
+  @else {
+    <span class="no-tasks-message">No task with due to this week.</span>
+  }
+</app-modal>

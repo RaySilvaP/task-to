@@ -17,7 +17,7 @@ import { TagService } from '../../services/tag-service';
   imports: [KanbanBoard, KanbanActionButton, ModalContext, Button, ModalPrompt, Select, FormsModule],
   templateUrl: './kanban-page.html',
   styleUrl: './kanban-page.css',
-  providers: [ContextService, KanbanColumnService, TaskService, TagService]
+  providers: [ContextService, KanbanColumnService, TaskService]
 })
 export class KanbanPage implements OnInit {
   protected readonly contextService = inject(ContextService);

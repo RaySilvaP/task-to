@@ -32,6 +32,12 @@ impl<'a> TimeBlockRepository<'a> {
         block.update(self.db.connection()).await
     }
 
+    pub async fn get_all(&self) -> Result<Vec<time_block::Model>, DbErr> {
+        time_block::Entity::find()
+            .all(self.db.connection())
+            .await
+    }
+
     pub async fn delete(&self, id: i32) -> Result<(), DbErr> {
         time_block::Entity::delete_by_id(id)
             .exec(self.db.connection())

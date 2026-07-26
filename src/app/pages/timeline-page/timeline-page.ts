@@ -6,22 +6,25 @@ import { TaskService } from '../../services/task-service';
 import { TimeBlockService } from '../../services/time-block-service';
 import TimeBlock from '../../models/timeBlock';
 import { TagService } from '../../services/tag-service';
+import { StatisticsService } from '../../services/statistics-service';
 
 @Component({
   selector: 'app-timeline-page',
   imports: [DatePipe, Timeline, ModalTimeBlock],
   templateUrl: './timeline-page.html',
   styleUrl: './timeline-page.css',
-  providers: [TaskService, TimeBlockService, TagService]
+  providers: [TaskService, TimeBlockService]
 })
 export class TimelinePage implements OnInit{
   private readonly timeBlockService = inject(TimeBlockService);
   private readonly tagService = inject(TagService);
+  private readonly statisticsService = inject(StatisticsService);
   protected today = signal<Date>(new Date(Date.now()));
   protected showBlockModal = signal<boolean>(false);
 
   ngOnInit(): void {
     this.tagService.load();
+    this.statisticsService.loadAverageBlockDuration();
   }
 
   protected resetDate() {
@@ -38,6 +41,7 @@ export class TimelinePage implements OnInit{
   protected onCreateTimeBlock(block: TimeBlock) {
     this.timeBlockService.add(block);
     this.timeBlockService.loadByLastDay();
+    this.statisticsService.loadAverageBlockDuration();
     this.showBlockModal.set(false);
   }
 }

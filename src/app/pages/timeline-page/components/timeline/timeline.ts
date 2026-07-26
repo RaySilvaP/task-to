@@ -1,9 +1,10 @@
-import { AfterViewInit, Component, effect, ElementRef, inject, input, signal, ViewChild } from '@angular/core';
+import { Component, effect, ElementRef, inject, input, signal, ViewChild } from '@angular/core';
 import TimeBlock from '../../../../models/timeBlock';
 import { TimeBlockComponent } from "../time-block-component/time-block-component";
-import { CdkDrag, CdkDragEnd, CdkDragHandle, CdkDragMove, DragRef, Point } from '@angular/cdk/drag-drop';
+import { CdkDrag, CdkDragEnd, CdkDragHandle, DragRef, Point } from '@angular/cdk/drag-drop';
 import { ModalTimeBlock } from "../modal-time-block/modal-time-block";
 import { TimeBlockService } from '../../../../services/time-block-service';
+import { StatisticsService } from '../../../../services/statistics-service';
 
 @Component({
   selector: 'app-timeline',
@@ -13,6 +14,7 @@ import { TimeBlockService } from '../../../../services/time-block-service';
 })
 export class Timeline {
   private readonly timeBlockService = inject(TimeBlockService);
+  private readonly statisticsService = inject(StatisticsService);
   protected hours = Array.from({ length: 25 }, (_, i) => i);
   protected pixelsPerMinute = 1;
   protected today = new Date(Date.now());
@@ -69,6 +71,7 @@ export class Timeline {
 
     this.showTimeBlockModal.set(null);
     this.loadTimeBlocks();
+    this.statisticsService.loadAverageBlockDuration();
   }
 
   protected onBlockClick(block: TimeBlock) {

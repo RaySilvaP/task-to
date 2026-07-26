@@ -1,4 +1,4 @@
-import { Component, inject, input, OnInit, output, signal } from '@angular/core';
+import { Component, computed, inject, input, OnInit, output, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import TimeBlock from '../../../../models/timeBlock';
 import { Modal } from "../../../../shared/components/modal/modal";
@@ -8,6 +8,7 @@ import { Button } from "../../../../shared/components/button/button";
 import { TaskService } from '../../../../services/task-service';
 import Task from '../../../../models/task';
 import { TaskCard } from '../../../../shared/components/task-card/task-card';
+import { StatisticsService } from '../../../../services/statistics-service';
 
 @Component({
   selector: 'app-modal-time-block',
@@ -16,18 +17,29 @@ import { TaskCard } from '../../../../shared/components/task-card/task-card';
   styleUrl: './modal-time-block.css',
 })
 export class ModalTimeBlock implements OnInit {
-  private taskService = inject(TaskService);
+  private readonly taskService = inject(TaskService);
+  private readonly statisticsService = inject(StatisticsService);
   private fb = inject(FormBuilder);
   protected timeBlockForm: FormGroup;
   protected showTaskModal = signal<boolean>(false);
   protected tasks = signal<Task[]>([]);
   protected selectedTask?: Task;
+  protected averageBlockDuration = this.statisticsService.averageBlockDuration;
   public type = input<'edit' | 'create'>('create');
   public timeBlock = input<TimeBlock>();
   public timelineDate = input<Date>();
   public close = output();
   public submit = output<TimeBlock>();
   public delete = output<number>();
+
+  protected averageBlockDurationDisplay = computed(() => {
+    const minutes = this.averageBlockDuration();
+    if (minutes >= 60) {
+      const hours = minutes / 60;
+      return `${hours.toFixed(1)} hours`;
+    }
+    return `${minutes} minutes`;
+  });
 
   constructor() {
     this.timeBlockForm = this.fb.group({

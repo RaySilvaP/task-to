@@ -49,7 +49,9 @@ pub fn run() {
             commands::tag::get_tags,
             commands::tag::add_tag,
             commands::tag::edit_tag,
-            commands::tag::delete_tag
+            commands::tag::delete_tag,
+            commands::statistics::get_average_duration,
+            commands::statistics::get_tasks_by_week
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

@@ -2,3 +2,7 @@
   <router-outlet />
   <app-navigation-bar />
 </main>
+
+@if(showWeekTasks()) {
+  <app-modal-week-tasks (close)="showWeekTasks.set(false)"/>
+}

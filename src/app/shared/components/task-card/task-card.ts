@@ -12,11 +12,12 @@ import { TagService } from '../../../services/tag-service';
 })
 export class TaskCard {
   private readonly tagService = inject(TagService);
+  public task = input.required<Task>();
+
   protected tag = computed(() => {
     const tags = this.tagService.tags();
     return tags.find(t => t.id === this.task().tag_id);
   })
-  public task = input.required<Task>();
 
   protected priorityClass(priority: string | undefined): string {
     switch (priority) {

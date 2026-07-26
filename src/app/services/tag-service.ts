@@ -2,7 +2,9 @@ import { Injectable, signal } from '@angular/core';
 import Tag from '../models/tag';
 import { invoke } from '@tauri-apps/api/core';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class TagService {
   private readonly _tags = signal<Tag[]>([]);
   public readonly tags = this._tags.asReadonly();

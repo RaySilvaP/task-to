@@ -4,6 +4,7 @@
     <app-input-field label="Date" type="date" formControlName="date" />
     <app-input-field label="Start" type="time" formControlName="start" />
     <app-input-field label="End" type="time" formControlName="end" />
+    <span class="statistic-message">Average time blocks duration: {{averageBlockDurationDisplay()}}</span>
     <div class="selected-task-field">
       <app-button (click)="showTaskModal.set(true)" variant="secondary">Select Task</app-button>
       <span>{{selectedTask?.name}}</span>

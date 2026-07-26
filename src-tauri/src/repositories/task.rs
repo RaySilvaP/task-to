@@ -3,7 +3,10 @@ use sea_orm::{
     QuerySelect, RelationTrait, TransactionTrait,
 };
 
-use crate::{database::Database, models::{task, tag}};
+use crate::{
+    database::Database,
+    models::{tag, task},
+};
 
 pub struct TaskRepository<'a> {
     db: &'a Database,
@@ -14,9 +17,12 @@ impl<'a> TaskRepository<'a> {
         TaskRepository { db }
     }
 
-    pub async fn get_all(&self, name_filter: Option<String>, tag_name_filter: Option<String>) -> Result<Vec<task::Model>, DbErr> {
-        let mut query = task::Entity::find()
-            .join(JoinType::LeftJoin, task::Relation::Tag.def());
+    pub async fn get_all(
+        &self,
+        name_filter: Option<String>,
+        tag_name_filter: Option<String>,
+    ) -> Result<Vec<task::Model>, DbErr> {
+        let mut query = task::Entity::find().join(JoinType::LeftJoin, task::Relation::Tag.def());
 
         let mut conditions = Condition::any();
         if let Some(name) = name_filter {
@@ -36,6 +42,21 @@ impl<'a> TaskRepository<'a> {
     pub async fn get(&self, kanban_column_id: i32) -> Result<Vec<task::Model>, DbErr> {
         task::Entity::find()
             .filter(task::Column::KanbanColumnId.eq(kanban_column_id))
+            .all(self.db.connection())
+            .await
+    }
+
+    pub async fn get_by_due_date_range(
+        &self,
+        start: &str,
+        end: &str,
+    ) -> Result<Vec<task::Model>, DbErr> {
+        task::Entity::find()
+            .filter(
+                Condition::all()
+                    .add(task::Column::Due.gte(start))
+                    .add(task::Column::Due.lt(end)),
+            )
             .all(self.db.connection())
             .await
     }
