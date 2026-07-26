@@ -1,6 +1,6 @@
 <app-modal [title]="type() == 'create' ? 'Create Kanban Column' : 'Edit Kanban Column'" (close)="close.emit()">
   <form [formGroup]="kanbanColumnForm">
-    <app-input-field label="Name" type="text" formControlName="name" />
+    <app-input-field label="Name*" type="text" formControlName="name" />
   </form>
 
   <app-modal-footer modal-footer>

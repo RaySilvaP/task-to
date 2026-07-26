@@ -52,10 +52,8 @@ form {
   color: gray;
 }
 
-.task-search-bar {
-  display: inline-block;
+.modal-task-footer {
   width: 100%;
-  font-size: var(--md);
 }
 
 .statistic-message {

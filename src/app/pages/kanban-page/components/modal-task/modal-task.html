@@ -1,6 +1,6 @@
 <app-modal [title]="type() == 'create' ? 'Create Task' : 'Edit Task'" (close)="close.emit()">
   <form [formGroup]=taskForm>
-    <app-input-field label="Name" type="text" formControlName="name"/>
+    <app-input-field label="Name*" type="text" formControlName="name"/>
     <app-input-field label="Due" type="date" formControlName="due"/>
 
     <app-select label="Priority" formControlName="priority">

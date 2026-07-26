@@ -1,10 +1,14 @@
 <app-modal [title]="type() == 'create' ? 'Create Block' : 'Edit Block'" (close)="close.emit()">
   <form [formGroup]="timeBlockForm">
-    <app-input-field label="Name" type="text" formControlName="name" />
-    <app-input-field label="Date" type="date" formControlName="date" />
-    <app-input-field label="Start" type="time" formControlName="start" />
-    <app-input-field label="End" type="time" formControlName="end" />
-    <span class="statistic-message">Average time blocks duration: {{averageBlockDurationDisplay()}}</span>
+    <app-input-field label="Name*" type="text" formControlName="name" />
+    <app-input-field label="Date*" type="date" formControlName="date" />
+    <app-input-field label="Start*" type="time" formControlName="start" />
+    <app-input-field label="End*" type="time" formControlName="end" />
+
+    <span class="statistic-message">
+      Average time blocks duration: {{averageBlockDurationDisplay()}}
+    </span>
+
     <div class="selected-task-field">
       <app-button (click)="showTaskModal.set(true)" variant="secondary">Select Task</app-button>
       <span>{{selectedTask?.name}}</span>
@@ -35,6 +39,8 @@
       <span class="no-tasks-message">No tasks found</span>
     }
 
-    <app-input-field placeholder="Filter tasks" (change)="onChangeFilter($event)"/>
+    <div class="modal-task-footer" modal-footer>
+      <app-input-field placeholder="Filter tasks" (change)="onChangeFilter($event)"/>
+    </div>
   </app-modal>
 }

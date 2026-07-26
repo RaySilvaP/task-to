@@ -1,6 +1,6 @@
 <app-modal [title]="type() == 'create' ? 'Create Context' : 'Edit Context'" (close)="close.emit()">
   <form [formGroup]="contextForm">
-    <app-input-field label="Name" type="text" formControlName="name" />
+    <app-input-field label="Name*" type="text" formControlName="name" />
   </form>
 
   <app-modal-footer modal-footer>
