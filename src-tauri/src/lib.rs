@@ -27,6 +27,7 @@ pub fn run() {
             Ok(())
         })
         .plugin(tauri_plugin_opener::init())
+        .plugin(tauri_plugin_alarm::init())
         .invoke_handler(tauri::generate_handler![
             commands::kanban_column::get_kanban_columns,
             commands::kanban_column::add_kanban_column,

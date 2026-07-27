@@ -15,7 +15,7 @@ name = "task_to_lib"
 crate-type = ["staticlib", "cdylib", "rlib"]
 
 [workspace]
-members = [".", "migration"]
+members = [".", "migration", "plugins/tauri-plugin-alarm"]
 
 [build-dependencies]
 tauri-build = { version = "2", features = [] }
@@ -26,6 +26,7 @@ tauri-plugin-opener = "2"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 migration = { path = "migration" }
+tauri-plugin-alarm = { path = "plugins/tauri-plugin-alarm" }
 sea-orm = { version = "2.0.0-rc", features = [
     "sqlx-sqlite",
     "runtime-tokio",
