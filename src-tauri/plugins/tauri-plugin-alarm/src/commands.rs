@@ -5,9 +5,17 @@ use crate::Result;
 use crate::AlarmExt;
 
 #[command]
-pub(crate) async fn ping<R: Runtime>(
+pub(crate) async fn schedule<R: Runtime>(
     app: AppHandle<R>,
-    payload: PingRequest,
-) -> Result<PingResponse> {
-    app.alarm().ping(payload)
+    payload: AlarmScheduleRequest,
+) -> Result<()> {
+    app.alarm().schedule(payload)
+}
+
+#[command]
+pub(crate) async fn cancel<R: Runtime>(
+    app: AppHandle<R>,
+    payload: AlarmCancelRequest,
+) -> Result<()> {
+    app.alarm().cancel(payload)
 }

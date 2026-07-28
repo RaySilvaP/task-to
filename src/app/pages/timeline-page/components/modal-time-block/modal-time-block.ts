@@ -38,7 +38,7 @@ export class ModalTimeBlock implements OnInit {
       const hours = minutes / 60;
       return `${hours.toFixed(1)} hours`;
     }
-    return `${minutes} minutes`;
+    return `${minutes.toFixed()} minutes`;
   });
 
   constructor() {

@@ -2,12 +2,20 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
-pub struct PingRequest {
-  pub value: Option<String>,
+pub struct AlarmScheduleRequest {
+    pub notification_id: String,
+    pub trigger_at: String,
+    pub message: String,
 }
 
-#[derive(Debug, Clone, Default, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
-pub struct PingResponse {
-  pub value: Option<String>,
+pub struct AlarmCancelRequest {
+    pub notification_id: String
 }
+
+//#[derive(Debug, Clone, Default, Deserialize, Serialize)]
+//#[serde(rename_all = "camelCase")]
+//pub struct PingResponse {
+  //pub value: Option<String>,
+//}

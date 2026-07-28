@@ -1,4 +1,4 @@
-use tauri::State;
+use tauri::{AppHandle, State};
 
 use crate::{
     app::AppState,
@@ -18,8 +18,14 @@ pub async fn get_time_blocks_by_day(
 pub async fn add_time_block(
     time_block: TimeBlockRequest,
     state: State<'_, AppState>,
+    app: AppHandle,
 ) -> Result<(), ()> {
-    state.time_block_service().add(time_block).await;
+    let block_id = state.time_block_service().add(time_block.clone()).await;
+
+    AppState::alarm_service(&app)
+        .schedule_time_block(block_id, time_block)
+        .unwrap();
+
     Ok(())
 }
 
@@ -28,8 +34,16 @@ pub async fn edit_time_block(
     block_id: i32,
     time_block: TimeBlockRequest,
     state: State<'_, AppState>,
+    app: AppHandle,
 ) -> Result<(), ()> {
-    state.time_block_service().edit(block_id, time_block).await;
+    state.time_block_service().edit(block_id, time_block.clone()).await;
+
+    let alarm_service = AppState::alarm_service(&app);
+    alarm_service.cancel_time_block(block_id).unwrap();
+    alarm_service
+        .schedule_time_block(block_id, time_block)
+        .unwrap();
+
     Ok(())
 }
 
@@ -37,7 +51,13 @@ pub async fn edit_time_block(
 pub async fn delete_time_block(
     block_id: i32,
     state: State<'_, AppState>,
+    app: AppHandle,
 ) -> Result<(), ()> {
     state.time_block_service().delete(block_id).await;
+
+    AppState::alarm_service(&app)
+        .cancel_time_block(block_id)
+        .unwrap();
+
     Ok(())
 }

@@ -14,9 +14,11 @@ pub fn init<R: Runtime, C: DeserializeOwned>(
 pub struct Alarm<R: Runtime>(AppHandle<R>);
 
 impl<R: Runtime> Alarm<R> {
-  pub fn ping(&self, payload: PingRequest) -> crate::Result<PingResponse> {
-    Ok(PingResponse {
-      value: payload.value,
-    })
+  pub fn schedule(&self, payload: AlarmScheduleRequest) -> crate::Result<()> {
+    Ok(())
+  }
+
+  pub fn cancel(&self, payload: AlarmCancelRequest) -> crate::Result<()> {
+    Ok(())
   }
 }

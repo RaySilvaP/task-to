@@ -42,7 +42,7 @@ impl<'a> TimeBlockService<'a> {
             .collect()
     }
 
-    pub async fn add(&self, request: TimeBlockRequest) {
+    pub async fn add(&self, request: TimeBlockRequest) -> i32 {
         println!("Adding new time block...");
 
         let now = chrono::Utc::now().to_rfc3339();
@@ -53,6 +53,8 @@ impl<'a> TimeBlockService<'a> {
         let block = self.time_block_repository.add(active_model).await.unwrap();
 
         println!("Time block added successfully: {}", block.id);
+
+        block.id
     }
 
     pub async fn edit(&self, block_id: i32, request: TimeBlockRequest) {

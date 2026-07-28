@@ -1,12 +1,11 @@
+use tauri::AppHandle;
+
 use crate::{
-    database::Database,
-    repositories::{
+    database::Database, repositories::{
         context::ContextRepository, kanban_column::KanbanColumnRepository, tag::TagRepository,
         task::TaskRepository, time_block::TimeBlockRepository,
-    },
-    services::{
-        context::ContextService, kanban_column::KanbanColumnService, statistics::StatisticsService,
-        tag::TagService, task::TaskService, time_block::TimeBlockService,
+    }, services::{
+        alarm_service::AlarmService, context::ContextService, kanban_column::KanbanColumnService, statistics::StatisticsService, tag::TagService, task::TaskService, time_block::TimeBlockService,
     },
 };
 
@@ -44,5 +43,9 @@ impl AppState {
 
     pub fn tag_service(&self) -> TagService<'_> {
         TagService::new(TagRepository::new(&self.db))
+    }
+
+    pub fn alarm_service(app: &'_ AppHandle) -> AlarmService<'_> {
+        AlarmService::new(app)
     }
 }
