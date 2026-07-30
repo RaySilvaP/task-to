@@ -39,6 +39,7 @@ pub fn run() {
             commands::context::edit_context,
             commands::context::delete_context,
             commands::task::get_tasks,
+            commands::task::get_task,
             commands::task::add_task,
             commands::task::edit_task,
             commands::task::order_tasks,
@@ -52,7 +53,9 @@ pub fn run() {
             commands::tag::edit_tag,
             commands::tag::delete_tag,
             commands::statistics::get_average_duration,
-            commands::statistics::get_tasks_by_week
+            commands::statistics::get_tasks_by_week,
+            commands::pomodoro::schedule_session,
+            commands::pomodoro::cancel_session
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

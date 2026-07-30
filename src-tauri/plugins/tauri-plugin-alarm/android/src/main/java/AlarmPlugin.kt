@@ -2,6 +2,7 @@ package com.ray.task_to.plugin.alarm
 
 import android.app.Activity
 import android.app.AlarmManager
+import android.content.Intent
 import android.content.Context
 import app.tauri.annotation.Command
 import app.tauri.annotation.InvokeArg
@@ -15,6 +16,7 @@ class AlarmScheduleArgs {
     lateinit var notificationId: String
     lateinit var triggerAt: String
     lateinit var message: String
+    var route: String? = null
 }
 
 @InvokeArg
@@ -24,6 +26,14 @@ class AlarmCancelArgs {
 
 @TauriPlugin
 class AlarmPlugin(private val activity: Activity): Plugin(activity) {
+    override fun onNewIntent(intent: Intent) {
+        val route = intent.getStringExtra("route")
+
+        val event = JSObject()
+        event.put("route", route)
+
+        trigger("newIntent", event)
+    }
 
     @Command
     fun schedule(invoke: Invoke) {

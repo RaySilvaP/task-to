@@ -19,6 +19,7 @@ class AlarmSchedule(private val args: AlarmScheduleArgs) {
             data = Uri.parse("alarm://${args.notificationId}")
             putExtra("notificationId", args.notificationId)
             putExtra("message", args.message)
+            args.route?.let { putExtra("route", it) }
         }
 
         val pendingIntent = PendingIntent.getBroadcast(

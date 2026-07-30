@@ -2,7 +2,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::models::task::TaskPriority;
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Clone)]
 pub struct TaskRequest {
     pub name: String,
     pub position: i32,

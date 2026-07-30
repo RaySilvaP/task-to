@@ -46,7 +46,16 @@ impl<'a> TaskService<'a> {
         tasks.into_iter().map(task::model_to_response).collect()
     }
 
-    pub async fn add(&self, request: TaskRequest) {
+    pub async fn get_by_id(&self, task_id: i32) -> Option<TaskResponse> {
+        println!("Getting task by id: {task_id}...");
+        self.task_repository
+            .get_by_id(task_id)
+            .await
+            .unwrap()
+            .map(task::model_to_response)
+    }
+
+    pub async fn add(&self, request: TaskRequest) -> i32 {
         println!("Adding new task...");
 
         let now = chrono::Utc::now().to_rfc3339();
@@ -61,6 +70,8 @@ impl<'a> TaskService<'a> {
             .unwrap();
 
         println!("Task added successfully: {}", task.id);
+
+        task.id
     }
 
     pub async fn delete(&self, task_id: i32) {

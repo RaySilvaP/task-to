@@ -8,15 +8,23 @@
 .block-head {
   display: flex;
   flex-direction: column;
+  overflow: hidden;
+  min-width: 0;
 }
 
 .block-name {
   font-size: var(--sm);
   font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .block-task-name {
   font-size: var(--sm);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .block-time {

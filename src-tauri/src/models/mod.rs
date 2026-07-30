@@ -5,6 +5,7 @@ pub mod kanban_column;
 pub mod task;
 pub mod time_block;
 pub mod tag;
+pub mod pomodoro;
 
 #[derive(Debug, Deserialize)]
 pub struct OrderRequest {

@@ -2,6 +2,7 @@ package com.ray.task_to.plugin.alarm
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -27,12 +28,27 @@ class AlarmReceiver : BroadcastReceiver() {
             notificationManager.createNotificationChannel(channel)
         }
 
+        val route = intent.getStringExtra("route")
+        val openAppIntent = context.packageManager.getLaunchIntentForPackage(context.packageName)?.apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+            route?.let { putExtra("route", it) }
+        }
+        val contentPendingIntent = if (openAppIntent != null) {
+            PendingIntent.getActivity(
+                context,
+                notificationId.hashCode(),
+                openAppIntent,
+                PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+            )
+        } else null
+
         val notification = NotificationCompat.Builder(context, channelId)
             .setSmallIcon(android.R.drawable.ic_dialog_alert)
             .setContentTitle("Alarm")
             .setContentText(message)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setAutoCancel(true)
+            .setContentIntent(contentPendingIntent)
             .build()
 
         notificationManager.notify(notificationId.hashCode(), notification)

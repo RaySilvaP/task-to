@@ -14,7 +14,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
     }
   ]
 })
-export class InputField implements ControlValueAccessor {
+export class InputField implements ControlValueAccessor, OnInit {
   private onChange = (_: string) => { };
   private onTouched = () => { };
 
@@ -25,7 +25,12 @@ export class InputField implements ControlValueAccessor {
   public placeholder = input<string>('');
   public type = input<'text' | 'date' | 'time' | 'number'>('text');
   public disabled = input(false);
+  public valueInput = input<string>('');
   public change = output<string>();
+
+  ngOnInit(): void {
+    this.value = this.valueInput();
+  }
 
   public writeValue(value: string | null): void {
     this.value = value ?? '';

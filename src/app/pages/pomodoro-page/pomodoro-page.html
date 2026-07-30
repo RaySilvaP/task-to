@@ -33,6 +33,7 @@
     <app-input-field
       label="Work (min)"
       type="number"
+      [valueInput]="workTime().toString()"
       [placeholder]="'25'"
       [disabled]="settingsDisabled()"
       (change)="onWorkTimeChange($event)"
@@ -40,6 +41,7 @@
     <app-input-field
       label="Rest (min)"
       type="number"
+      [valueInput]="restTime().toString()"
       [placeholder]="'5'"
       [disabled]="settingsDisabled()"
       (change)="onRestTimeChange($event)"
@@ -47,14 +49,16 @@
     <app-input-field
       label="Big Rest (min)"
       type="number"
-      [placeholder]="'15'"
+      [valueInput]="bigRestTime().toString()"
+      [placeholder]="'0'"
       [disabled]="settingsDisabled()"
       (change)="onBigRestTimeChange($event)"
     />
     <app-input-field
       label="Sessions before big rest"
       type="number"
-      [placeholder]="'3'"
+      [valueInput]="workSessionsBeforeBigRest().toString()"
+      [placeholder]="'0'"
       [disabled]="settingsDisabled()"
       (change)="onWorkSessionsChange($event)"
     />

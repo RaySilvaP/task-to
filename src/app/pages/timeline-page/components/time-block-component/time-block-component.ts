@@ -1,6 +1,8 @@
-import { Component, input } from '@angular/core';
+import { Component, inject, input, OnInit, signal } from '@angular/core';
 import TimeBlock from '../../../../models/timeBlock';
 import { ReactiveFormsModule } from '@angular/forms';
+import { TaskService } from '../../../../services/task-service';
+import Task from '../../../../models/task';
 
 @Component({
   selector: 'app-time-block-component',
@@ -8,8 +10,17 @@ import { ReactiveFormsModule } from '@angular/forms';
   templateUrl: './time-block-component.html',
   styleUrl: './time-block-component.css',
 })
-export class TimeBlockComponent {
+export class TimeBlockComponent implements OnInit {
+  private readonly taskService = inject(TaskService);
+  protected task = signal<Task | null>(null);
   public timeBlock = input.required<TimeBlock>();
+
+  async ngOnInit(): Promise<void> {
+    if(this.timeBlock().task_id) {
+      const task = await this.taskService.getById(this.timeBlock().task_id!);
+      this.task.set(task);
+    }
+  }
 
   protected timeRange(): string {
     const block = this.timeBlock();

@@ -1,7 +1,7 @@
 <div class="block-head">
   <span class="block-name">{{timeBlock().name}}</span>
-  @if(timeBlock().task_id) {
-    <span class="block-task-name">{{timeBlock().name}}</span>
+  @if(task() !== null) {
+    <span class="block-task-name">{{task()!.name}}</span>
   }
 </div>
 

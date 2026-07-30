@@ -10,6 +10,10 @@ export class TaskService {
     return await invoke<Task[]>('get_tasks', { nameFilter, tagNameFilter })
   }
 
+  public async getById(taskId: number) {
+    return await invoke<Task>('get_task', { taskId });
+  }
+
   public async add(task: Task) {
     await invoke('add_task', { task });
   }
