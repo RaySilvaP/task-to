@@ -26,15 +26,6 @@ class AlarmCancelArgs {
 
 @TauriPlugin
 class AlarmPlugin(private val activity: Activity): Plugin(activity) {
-    override fun onNewIntent(intent: Intent) {
-        val route = intent.getStringExtra("route")
-
-        val event = JSObject()
-        event.put("route", route)
-
-        trigger("newIntent", event)
-    }
-
     @Command
     fun schedule(invoke: Invoke) {
         val args = invoke.parseArgs(AlarmScheduleArgs::class.java)
